@@ -1,12 +1,13 @@
 # nyuad-spammer
 
 ## Problem Identification
-Current NYU Abu Dhabi students are suffering. 
-They are missing deadlines, events, and information. But why?
+Current NYU Abu Dhabi students are suffering.  
+They are missing deadlines, events, and information. But why?  
 In today's world, there is an increasing amount of platforms and notifications students must keep track of. Therefore, it is highly unlikely that they will check the Student Portal and Facebook groups within NYU Abu Dhabi. 
 
 ## Purpose and Goals
-The purpose of this project is to help the NYUAD student community be informed of their surroundings which include deadlines, events, operating campus time changes, and other information. 
+The purpose of this project is to help the NYUAD student community be informed of their surroundings which include deadlines, events, operating campus time changes, and other information.  
+
 Our goal will be to create a Facebook Messenger Chatbot that will allow students to get message notifications. This will be done through the scraping of Student Portal using python and BeautifulSoup and NYUAD Facebook Groups using the Facebook API. 
 
 ## User Stories and Use Cases
