@@ -1,7 +1,8 @@
 # nyuad-spammer
 
-![](https://github.com/simonseo/nyuad-spammer/blob/master/images/logo_v1.png)
+
 <!-- /Users/student/Desktop/nyuad-spammer/images/logo_v1.png -->
+<img algin="center" src="https://github.com/simonseo/nyuad-spammer/blob/master/images/logo_v1.png" alt="alt text" width="250" height="200">
 
 ## Problem Identification
 Current NYU Abu Dhabi students are suffering. They are missing deadlines, events, and information. But why?  
