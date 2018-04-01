@@ -1,6 +1,6 @@
 # nyuad-spammer
 
-![Image of Yaktocat](/Users/student/Desktop/nyuad-spammer/images/logo_v1.png)
+![](https://github.com/simonseo/nyuad-spammer/blob/master/images/logo_v1.png)
 <!-- /Users/student/Desktop/nyuad-spammer/images/logo_v1.png -->
 
 ## Problem Identification
