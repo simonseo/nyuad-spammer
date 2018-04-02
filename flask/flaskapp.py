@@ -2,53 +2,26 @@ from flask import Flask
 from post import Post
 import sqlite3 
 from secret import HOSTADDRESS
-
-conn = sqlite3.connect('sample.db')
-c = conn.cursor()
+import databaseOperations as db
 
 app = Flask(__name__)
 
-@app.route("/setup")
-def setup():
-	conn = sqlite3.connect('sample.db')
-	c = conn.cursor()
-	c.execute("""CREATE TABLE sample (
-		ID int, 
-		content text
-		)""")
-	conn.commit()
-	conn.close()
-	return "Server has been setup"
-
 @app.route("/drop")
 def drop():
-	conn = sqlite3.connect('sample.db')
-	c = conn.cursor()
-	c.execute("DROP TABLE sample")
-	conn.commit()
-	conn.close()
-	return "Table has been dropped"
+	return db.drop()
 
-@app.route("/addpost/<int:addID>/<addPost>")
-def addpost(addID,addPost):
-	postToAdd=Post(addID,addPost)
-	with conn:
-		c.execute("INSERT INTO sample VALUES (:ID, :content)", {'ID': postToAdd.ID, 'content': postToAdd.content})
-	return "post added"
+@app.route("/addpost/<postToAdd>")
+def addpost(postToAdd):
+	return db.addpost(postToAdd)
 
 
 @app.route("/getpost/<int:getID>")
 def getpost(getID):
-	c.execute("SELECT content FROM sample WHERE ID=:ID", {'ID': getID})
-	x=c.fetchall()[0][0]
-	return x
+	return db.getpost(getID)
 
 @app.route("/rmpost/<int:rmID>")
-def remove_post(rmID):
-	with conn:
-		c.execute("DELETE from sample WHERE ID = :ID",
-				  {'ID': rmID})
-
+def removepost(rmID):
+	return db.removepost(rmID)
 
 if __name__ == "__main__":
-	app.run(host=HOSTADDRESS, port=80)
+	app.run()#host=HOSTADDRESS, port=80)

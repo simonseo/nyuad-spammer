@@ -6,7 +6,7 @@ c = conn.cursor()
 c.execute("DROP TABLE IF EXISTS sample")
 
 c.execute("""CREATE TABLE posts (
-	ID integer primary key autoincrement,
+	ID integer primary key,
 	content text not null
 )""")
 
