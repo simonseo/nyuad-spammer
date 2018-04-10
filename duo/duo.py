@@ -5,7 +5,11 @@ import json
 import sys
 from urllib import parse
 
+SECRETFILE = 'secrets.json'
+
 def qr_url_to_secret(qr_url):
+	'''Activates the QR url and saves HOTP key '''
+
 	#--- Create request URL
 	data = parse.unquote(qr_url.split('?value=')[1])           # get ?value=XXX
 	code = data.split('-')[0].replace('duo://', '')            # first half of value is the activation code
@@ -23,42 +27,40 @@ def qr_url_to_secret(qr_url):
 		raise Exception("The given URL is invalid. Try a new QR URL: {}".format(qr_url))
 	print(response_dict)
 
-	#--- Save to secrets.json
-	with open("secrets.json", "w") as f:
-		secrets = {}
-		secrets["hotp_secret"] = response_dict['response']['hotp_secret']
-		secrets["count"] = 0
+	hotp_secret = response_dict['response']['hotp_secret']
+	encoded_secret = base64.b32encode(hotp_secret.encode("utf-8"))
+	return encoded_secret
+
+def save_secret(hotp_secret, count):
+	'''Save to secrets.json
+	hotp_secret should look like "b'MRRTMM3FHFTGMMRYGI2WKNRQGI3GMMZWME2TKNDCMNRWGMJQGZQQ===='" 
+	count should be an int'''
+	secrets = {
+		"hotp_secret" : hotp_secret,
+		"count" : count
+	}
+	with open(SECRETFILE, "w") as f:
 		json.dump(secrets, f)
 
-	hotp_secret = response_dict['response']['hotp_secret']
-	secret = base64.b32encode(hotp_secret.encode("utf-8"))
-	print("HOTP Secret:", secret) # As long as the secret key is the same, 
-	hotp = pyotp.HOTP(secret)     # the HOTP object is the same
+def load_secret():
+	with open(SECRETFILE, "r") as f:
+		secret_dict = json.load(f)
+	return secret_dict
 
-	# Generate 10 OTPs! 
-	# You may use any OTP but all previous OTPs will become invalid 
-	print("First 10 One Time Passwords!")
-	for i in range(10):
-		print(hotp.at(i))
-
-	return secret
 
 def HOTP():
 	'''Usage: generate = HOTP(); passcode = generate()'''
 	#--- Create HOTP object
-	with open("secrets.json", "r") as f:
-		secret_dict = json.load(f)
-		secret = secret_dict.get("hotp_secret")
-	secret = base64.b32encode(secret.encode("utf-8"))
-	hotp = pyotp.HOTP(secret)
+	secret_dict = load_secret()
+	count = secret_dict.get("count", 0)
+	hotp_secret = secret_dict.get("hotp_secret")
+	hotp = pyotp.HOTP(secret)   # As long as the secret key is the same, the HOTP object is the same
 
 	#--- Generate new passcode
 	def generate():
-		count = secret_dict.get("count", 0)
 		passcode = hotp.at(count)
-		secret_dict["count"] = count + 1
-		with open("secrets.json", "w") as f:
-			secret_dict = json.dump(secret_dict, f)
+		count += 1
+		save_secret(hotp_secret, count)
 		return passcode
 	return generate
 
@@ -68,4 +70,13 @@ if __name__ == '__main__':
 		print("Usage: python3 duo.py <url-to-duo-qr>")
 		exit()
 	qr_url = sys.argv[1]
-	qr_url_to_secret(qr_url)
+	hotp_secret = qr_url_to_secret(qr_url)
+	save_secret(hotp_secret, count=0)
+
+	# Generate 10 OTPs!
+	# You may use any OTP but all previous OTPs will become invalid
+	print("HOTP Secret:", hotp_secret)
+	print("First 10 One Time Passwords:")
+	generateOTP = HOTP()
+	for i in range(10):
+		print(generateOTP())
