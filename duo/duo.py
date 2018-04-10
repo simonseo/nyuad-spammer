@@ -28,12 +28,11 @@ def qr_url_to_secret(qr_url):
 	print(response_dict)
 
 	hotp_secret = response_dict['response']['hotp_secret']
-	encoded_secret = base64.b32encode(hotp_secret.encode("utf-8"))
-	return encoded_secret
+	return hotp_secret
 
 def save_secret(hotp_secret, count):
 	'''Save to secrets.json
-	hotp_secret should look like "b'MRRTMM3FHFTGMMRYGI2WKNRQGI3GMMZWME2TKNDCMNRWGMJQGZQQ===='" 
+	hotp_secret should look like "7e1c0372fec015ac976765ef4bb5c3f3" 
 	count should be an int'''
 	secrets = {
 		"hotp_secret" : hotp_secret,
@@ -52,15 +51,16 @@ def HOTP():
 	'''Usage: generate = HOTP(); passcode = generate()'''
 	#--- Create HOTP object
 	secret_dict = load_secret()
-	count = secret_dict.get("count", 0)
+	HOTP.count = secret_dict.get("count", 0)
 	hotp_secret = secret_dict.get("hotp_secret")
-	hotp = pyotp.HOTP(secret)   # As long as the secret key is the same, the HOTP object is the same
+	encoded_secret = base64.b32encode(hotp_secret.encode("utf-8"))
+	hotp = pyotp.HOTP(encoded_secret)   # As long as the secret key is the same, the HOTP object is the same
 
 	#--- Generate new passcode
 	def generate():
-		passcode = hotp.at(count)
-		count += 1
-		save_secret(hotp_secret, count)
+		passcode = hotp.at(HOTP.count)
+		HOTP.count += 1
+		save_secret(hotp_secret, HOTP.count)
 		return passcode
 	return generate
 
@@ -75,7 +75,8 @@ if __name__ == '__main__':
 
 	# Generate 10 OTPs!
 	# You may use any OTP but all previous OTPs will become invalid
-	print("HOTP Secret:", hotp_secret)
+	print("HOTP Secret:", base64.b32encode(hotp_secret.encode("utf-8")))
+
 	print("First 10 One Time Passwords:")
 	generateOTP = HOTP()
 	for i in range(10):
