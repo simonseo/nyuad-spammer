@@ -1,0 +1,14 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*- 
+# @File Name: forever.py
+# @Created:   2018-04-11 13:03:41  Simon Myunggun Seo (simon.seo@nyu.edu) 
+# @Updated:   2018-04-11 13:04:14  Simon Seo (simon.seo@nyu.edu)
+# Code from: https://www.alexkras.com/how-to-restart-python-script-after-exception-and-run-it-forever/
+from subprocess import Popen
+import sys
+
+filename = sys.argv[1]
+while True:
+    print("\nStarting " + filename)
+    p = Popen("python " + filename, shell=True)
+    p.wait()

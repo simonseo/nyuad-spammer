@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*- 
 # @File Name: scrapper.py
 # @Created:   2018-04-11 02:57:12  Simon Myunggun Seo (simon.seo@nyu.edu) 
-# @Updated:   2018-04-11 05:04:37  Simon Seo (simon.seo@nyu.edu)
+# @Updated:   2018-04-11 22:21:20  Simon Seo (simon.seo@nyu.edu)
 import sys, time
 sys.path.insert(0,'..')
 from duo import duo
@@ -11,7 +11,6 @@ from secrets import NYU_NETID, NYU_PASSWORD
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
-from bs4 import BeautifulSoup as bs
 from contextlib import contextmanager
 
 @contextmanager
