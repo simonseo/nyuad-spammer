@@ -1,17 +1,20 @@
 # nyuad-spammer
 
-
-<!-- /Users/student/Desktop/nyuad-spammer/images/logo_v1.png -->
-<img algin="center" src="https://github.com/simonseo/nyuad-spammer/blob/master/images/logo_v1.png" alt="alt text" width="250" height="200">
+<!-- ![](https://github.com/simonseo/nyuad-spammer/blob/master/images/logo_v1.png) -->
+<!-- ![](/Users/student/Desktop/nyuad-spammer/images/logo_v1.png) -->
+<img src="https://github.com/simonseo/nyuad-spammer/blob/master/images/logo_v1.png" alt="alt text" width="250" height="200">
 
 ## Problem Identification
-Current NYU Abu Dhabi students are suffering. They are missing deadlines, events, and information. But why?  
-In today's world, there is an increasing amount of platforms and notifications students must keep track of. Therefore, it is highly unlikely that they will check the Student Portal and Facebook groups within NYU Abu Dhabi on a day to day basis.
+NYU Abu Dhabi students are constantly missing deadlines, events, and information. But why?  
+In today's world, there is an increasing amount of platforms and notifications students must keep track of. These information come via many
+channels including the student portal. As there exists almost no reason to go on the student portal besides checking the announcement,
+many students do not check the student portal often enough, and miss information that could be of potential use.
 
 ## Purpose and Goals
-The purpose of this project is to help the NYUAD student community be informed of their surroundings which include deadlines, events, operating campus time changes, and other university-related information.  
+The purpose of this project is to help the NYUAD student community be informed of deadlines, events, operating campus time changes, and other university-related information.
 
-Our goal is to create a Facebook Messenger Chatbot that will allow students to get message notifications. This will be done through the scraping of Student Portal using python and BeautifulSoup and NYUAD Facebook Groups using the Facebook API.
+Our goal is to create a Facebook Messenger Chatbot that will allow students to get message notifications. This will be done through the scraping of Student Portal using python and BeautifulSoup. We decided the facebook chatbot, as facebook messenger is an application that
+most students check multiple times throughout the day. We believe that if we can merge the flow of useful information to a channel which is already used often, it would be easier for the information to be properly delivered.
 
 ## User Stories and Use Cases
 - As a user, I want to be able to check the nyuad-spammer chatbot
