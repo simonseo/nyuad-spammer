@@ -1,9 +1,10 @@
 */__pycache__/
 */sample.db
+*.db
 */secret.py
 */secrets.py
 */secrets.json
-*.db
+*/testsender.py
 .DS_Store
 *.pyc
 *.log
