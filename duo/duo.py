@@ -2,10 +2,12 @@ import pyotp
 import requests
 import base64
 import json
-import sys
+import sys, inspect
+from os.path import dirname, join, abspath
 from urllib import parse
 
 SECRETFILE = 'secrets.json'
+SECRETFILE = join(dirname(abspath(inspect.stack()[0][1])), SECRETFILE)
 
 def qr_url_to_secret(qr_url):
 	'''Activates the QR url and saves HOTP key '''
