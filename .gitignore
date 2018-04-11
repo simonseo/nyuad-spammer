@@ -4,3 +4,4 @@
 */secrets.py
 */secrets.json
 *.db
+.DS_Store
