@@ -1,9 +1,11 @@
 */__pycache__/
+.pytest_cache
 */sample.db
 *.db
 */secret.py
 */secrets.py
 */secrets.json
+*/secrets_backup.json
 */testsender.py
 .DS_Store
 *.pyc
