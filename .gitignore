@@ -6,3 +6,4 @@
 *.db
 .DS_Store
 *.pyc
+*.log
