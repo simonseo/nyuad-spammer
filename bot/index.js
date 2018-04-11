@@ -1,7 +1,14 @@
 const config = require('config');
 
 const TeleBot = require('telebot');
-const bot = new TeleBot(config.get('access_token'));
+
+const bot = new TeleBot({
+
+	token: config.get('access_token'),
+	usePlugins: ['about'],
+	pluginFolder: '../../../plugins/'
+
+});
 
 
 bot.on(['/start'], (msg) => {
