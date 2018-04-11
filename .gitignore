@@ -1,5 +1,14 @@
 */__pycache__/
 */sample.db
 */secret.py
+<<<<<<< HEAD
 *.db
 */testsender.py
+=======
+*/secrets.py
+*/secrets.json
+*.db
+.DS_Store
+*.pyc
+*.log
+>>>>>>> fa39846234351dfaba8f3a22472a7bd3e514b3b9
