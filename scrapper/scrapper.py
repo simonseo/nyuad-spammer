@@ -2,32 +2,36 @@
 # -*- coding: utf-8 -*- 
 # @File Name: scrapper.py
 # @Created:   2018-04-11 02:57:12  Simon Myunggun Seo (simon.seo@nyu.edu) 
-# @Updated:   2018-04-11 04:53:17  Simon Seo (simon.seo@nyu.edu)
+# @Updated:   2018-04-11 05:04:37  Simon Seo (simon.seo@nyu.edu)
 import sys, time
 sys.path.insert(0,'..')
 from duo import duo
+from secrets import NYU_NETID, NYU_PASSWORD
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup as bs
+from contextlib import contextmanager
 
-def setupHeadlessDriver():
+@contextmanager
+def headlessDriver():
 	options = webdriver.ChromeOptions()
 	options.add_argument('headless')
 	driver = webdriver.Chrome(chrome_options=options)
 	driver.implicitly_wait(10)
-	return driver
+	yield driver
+	driver.close()
 
-def authenticate(driver, nyu_netid, nyu_password):
+def authenticate(driver):
 	if "NYU Login" in driver.title:
 		# Normal Auth
 		print("Authenticating NYU Shibboleth")
 		username_box = driver.find_element_by_name("j_username")
-		username_box.clear(); username_box.send_keys(nyu_netid)
+		username_box.clear(); username_box.send_keys(NYU_NETID)
 
 		password_box = driver.find_element_by_name("j_password")
-		password_box.clear(); password_box.send_keys(nyu_password)
+		password_box.clear(); password_box.send_keys(NYU_PASSWORD)
 
 		password_box.send_keys(Keys.RETURN)
 		time.sleep(5)
@@ -48,18 +52,26 @@ def authenticate(driver, nyu_netid, nyu_password):
 		driver.switch_to_default_content()
 		time.sleep(3)
 
-def getAnnouncementJson(driver, nyu_netid, nyu_password):
+def getAnnouncementJson(driver):
 	print("Retrieving Student Portal Announcements")
 	driver.get("https://students.nyuad.nyu.edu/apps/announcements/index")
 	if "NYU Login" in driver.title:
-		authenticate(driver, nyu_netid, nyu_password)
+		authenticate(driver)
 	jsonStr = driver.find_element_by_tag_name('body').text
 	return jsonStr
 
+def main():
+	while(True):
+		with headlessDriver() as driver:
+			jsonStr = getAnnouncementJson(driver)
+
+		# write code to send jsonStr to DB server here...
+
+		time.sleep(5*60) # 5 minutes
+
+
 if __name__ == '__main__':
-	from secrets import NYU_NETID, NYU_PASSWORD
-	driver = setupHeadlessDriver()
-	jsonStr = getAnnouncementJson(driver, NYU_NETID, NYU_PASSWORD)
-	print(jsonStr[:500])
-	driver.close()
+	with headlessDriver() as driver:
+		jsonStr = getAnnouncementJson(driver)
+		print(jsonStr[:500])
 	
