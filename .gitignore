@@ -5,3 +5,4 @@
 */secrets.json
 *.db
 .DS_Store
+*.pyc
