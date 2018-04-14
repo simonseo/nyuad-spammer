@@ -4,7 +4,7 @@ const apiai = require('apiai');
 const uuid = require('node-uuid');
 const config = require('config');
 
-var helpers = [ 'start', '/start', 'about', '/about', 'commands', '/commands'];
+let helpers = ['/start', '/about', '/categories', '/menu', '/athletics', '/studentlife'];
 
 module.exports = {
 
@@ -26,7 +26,7 @@ module.exports = {
       const sender = msg.from.id;
       const text = msg.text;
 
-      if (helpers.indexOf(text.toLowerCase()) >= 0) {
+      if (helpers.indexOf(text) >= 0) {
         return;
       }
 
