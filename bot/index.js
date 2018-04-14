@@ -5,18 +5,17 @@ const TeleBot = require('telebot');
 
 const bot = new TeleBot({
   token: config.get('access_token'),
-  usePlugins: ['about', 'dialogflow'],
+  usePlugins: ['about', 'spammer', 'dialogflow', 'categories', 'ask'],
   pluginFolder: '../../../plugins/'
 });
 
-bot.on('text', (msg) => {
+bot.on(['/start'], (msg) => {
 
-  if (msg.text.toLowerCase() == 'start' || msg.text.toLowerCase() == '/start'){
-    return bot.sendMessage(msg.from.id, `Hello, ${ msg.from.first_name }!`).then(() => {
-        bot.sendMessage(msg.from.id, 'Welcome to the NYUAD Spammer Bot');
-    });
-  }
+  let replyMarkup = bot.keyboard([
+      ['/about', '/menu', '/categories'],
+  ], {resize: true});
 
+  return bot.sendMessage(msg.from.id, 'Welcome to the NYUAD Spammer Bot', {replyMarkup});
 });
 
 bot.start();
