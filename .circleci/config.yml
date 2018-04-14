@@ -36,8 +36,6 @@ jobs:
             cp scrapper/secrets.example.py scrapper/secrets.py
             cp duo/secrets.example.json duo/secrets.json
 
-            cp config/s3.config.example.js config/s3.config.js
-
       - save_cache:
           paths:
             - ./venv
