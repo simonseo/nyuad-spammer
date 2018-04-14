@@ -10,3 +10,10 @@
 .DS_Store
 *.pyc
 *.log
+.Python
+.pytest_cache/
+bin/
+duo/secrets_backup.json
+include/
+lib/
+pip-selfcheck.json
