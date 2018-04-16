@@ -33,6 +33,8 @@ jobs:
             python3 -m venv venv
             . venv/bin/activate
             pip install -r requirements.txt
+            cp scrapper/secrets.example.py scrapper/secrets.py
+            cp duo/secrets.example.json duo/secrets.json
 
       - save_cache:
           paths:
@@ -48,7 +50,7 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
-            python manage.py test
+            pytest
 
       - store_artifacts:
           path: test-reports
