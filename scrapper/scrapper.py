@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*- 
 # @File Name: scrapper.py
 # @Created:   2018-04-11 02:57:12  Simon Myunggun Seo (simon.seo@nyu.edu) 
-# @Updated:   2018-04-15 13:45:26  Simon Seo (simon.seo@nyu.edu)
+# @Updated:   2018-04-17 02:40:18  Simon Seo (simon.seo@nyu.edu)
 import sys, time
 sys.path.insert(0,'..')
 from duo import duo
