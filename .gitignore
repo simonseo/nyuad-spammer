@@ -17,3 +17,4 @@ duo/secrets_backup.json
 include/
 lib/
 pip-selfcheck.json
+bot/default.json
