@@ -29,15 +29,15 @@ module.exports =  {
       }
       //SUBSCRIPTIONS
       if (msg.data == 'subscriptions'){
-        return bot.sendMessage(msg.from.id, 'Type the category you wish to subscribe to', {ask: 'subcategory'});
+        return bot.sendMessage(msg.from.id, 'Type the category you wish to subscribe to', {ask: 'sub_category'});
       }
       //UNSUBSCRIPTIONS
       if (msg.data == 'unsubscriptions'){
-        return bot.sendMessage(msg.from.id, 'Type the category you wish to unsubscribe from', {ask: 'unsubcategory'});
+        return bot.sendMessage(msg.from.id, 'Type the category you wish to unsubscribe from', {ask: 'unsub_category'});
       }
     });
 
-    bot.on('ask.subcategory', (msg) => {
+    bot.on('ask.sub_category', (msg) => {
       if (categories.indexOf(msg.text) >= 0){
         return bot.sendMessage(msg.from.id, 'You are now subscribed to ' + msg.text);
       } else {
@@ -45,7 +45,7 @@ module.exports =  {
       }
     });
 
-    bot.on('ask.unsubcategory', (msg) => {
+    bot.on('ask.unsub_category', (msg) => {
       if (categories.indexOf(msg.text) >= 0){
         return bot.sendMessage(msg.from.id, 'You are now unsubscribed from ' + msg.text);
       } else {
