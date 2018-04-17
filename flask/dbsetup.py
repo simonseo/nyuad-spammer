@@ -3,10 +3,7 @@ import sqlite3
 conn = sqlite3.connect('posts.db')
 c = conn.cursor()
 
-c.execute("DROP TABLE IF EXISTS sample")
-c.execute("DROP TABLE IF EXISTS posts")
-
-c.execute("""CREATE TABLE posts (
+c.execute("""CREATE TABLE IF NOT EXISTS posts (
 	category_id text not null,
 	category_name text not null,
 	created_at text not null,
@@ -19,6 +16,15 @@ c.execute("""CREATE TABLE posts (
 	topic text not null,
 	updated text not null,
 	updated_at text not null
+)""")
+
+c.execute("""CREATE TABLE IF NOT EXISTS users (
+	userID text not null
+)""")
+
+c.execute("""CREATE TABLE IF NOT EXISTS userSubscriptions (
+	category_id text not null,
+	userID text not null
 )""")
 
 conn.commit()
