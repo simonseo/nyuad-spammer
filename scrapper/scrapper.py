@@ -2,11 +2,11 @@
 # -*- coding: utf-8 -*- 
 # @File Name: scrapper.py
 # @Created:   2018-04-11 02:57:12  Simon Myunggun Seo (simon.seo@nyu.edu) 
-# @Updated:   2018-04-17 02:40:18  Simon Seo (simon.seo@nyu.edu)
+# @Updated:   2018-04-17 11:02:13  Simon Seo (simon.seo@nyu.edu)
 import sys, time
 sys.path.insert(0,'..')
 from duo import duo
-from secrets import NYU_NETID, NYU_PASSWORD
+from scrapper.secrets import NYU_NETID, NYU_PASSWORD
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
