@@ -5,8 +5,19 @@ def addpost(data):
 	postToAdd=Post(data)
 	conn = sqlite3.connect('posts.db')
 	c = conn.cursor()
+
 	with conn:
-		c.execute("INSERT INTO posts VALUES (:category_id, :category_name, :created_at, :email, :fullname, :ID, :message, :publish_date, :title, :topic, :updated, :updated_at)", {"category_id":postToAdd.category_id, "category_name":postToAdd.category_name, "created_at":postToAdd.created_at, "email":postToAdd.email, "fullname":postToAdd.fullname, "ID":postToAdd.ID, "message":postToAdd.message, "publish_date":postToAdd.publish_date, "title":postToAdd.title, "topic":postToAdd.topic, "updated":postToAdd.updated, "updated_at":postToAdd.updated_at})
+		c.execute("SELECT updated,updated_at FROM posts WHERE ID=:ID", {'ID': postToAdd.ID})
+	x=c.fetchone()
+
+	if x:
+		if x[0]=='1':
+			with conn:
+				c.execute("UPDATE posts SET message=?, updated_at=? WHERE ID=?", (postToAdd.message, postToAdd.updated_at, postToAdd.ID))
+	else:
+		with conn:
+			c.execute("INSERT INTO posts VALUES (:category_id, :category_name, :created_at, :email, :fullname, :ID, :message, :publish_date, :title, :topic, :updated, :updated_at)", {"category_id":postToAdd.category_id, "category_name":postToAdd.category_name, "created_at":postToAdd.created_at, "email":postToAdd.email, "fullname":postToAdd.fullname, "ID":postToAdd.ID, "message":postToAdd.message, "publish_date":postToAdd.publish_date, "title":postToAdd.title, "topic":postToAdd.topic, "updated":postToAdd.updated, "updated_at":postToAdd.updated_at})
+
 	conn.commit()
 	conn.close()
 	return "post added"
