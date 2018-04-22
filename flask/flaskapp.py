@@ -3,6 +3,7 @@ from post import Post
 from secret import HOSTADDRESS
 from werkzeug import secure_filename
 from readCSV import ReadCSV
+from dbsetup import DBsetup
 import databaseOperations as db
 import sqlite3 
 import os
@@ -54,4 +55,5 @@ def getCSV():
 	'''
 
 if __name__ == "__main__":
+	DBsetup()
 	app.run()#host=HOSTADDRESS, port=80)
