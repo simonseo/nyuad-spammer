@@ -15,7 +15,6 @@ const bot = new BootBot({
 
 bot.module(categoriesModule);
 bot.module(spammerModule);
-bot.module(dialogflowModule);
 
 bot.setGetStartedButton((payload, chat) => {
   chat.getUserProfile()
@@ -29,20 +28,22 @@ bot.setGetStartedButton((payload, chat) => {
 
 bot.setPersistentMenu([
   {
-    type: 'postback',
     title: 'Categories',
+    type: 'postback',
     payload: 'MENU_CATEGORIES'
   },
   {
-    type: 'postback',
     title: 'Subscribe',
+    type: 'postback',
     payload: 'MENU_SUBSCRIBE'
   },
   {
-    type: 'postback',
     title: 'Unsubscribe',
+    type: 'postback',
     payload: 'MENU_UNSUBSCRIBE'
   }
 ]);
+
+bot.module(dialogflowModule);
 
 bot.start(process.env.PORT || 3000);
