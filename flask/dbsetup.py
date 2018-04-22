@@ -29,6 +29,11 @@ def DBsetup():
 		userID text not null
 	)""")
 
+	c.execute("""CREATE TABLE IF NOT EXISTS categories (
+		category_id text not null,
+		category_name text not null
+	)""")
+
 	conn.commit()
 	conn.close()
 
