@@ -13,9 +13,9 @@ def addpost(data):
 
 	if x:
 		if x[0]=='1':
-			toAddTime=dt.strptime(x[1], "%Y-%m-%d %H:%M:%S")
-			savedTime=dt.strptime(postToAdd.updated_at, "%Y-%m-%d %H:%M:%S")
-			if toAddTime < savedTime:
+			savedTime=dt.strptime(x[1], "%Y-%m-%d %H:%M:%S")
+			toAddTime=dt.strptime(postToAdd.updated_at, "%Y-%m-%d %H:%M:%S")
+			if toAddTime > savedTime:
 				print("Time replaced for post ID "+ postToAdd.ID)
 				with conn:
 					c.execute("UPDATE posts SET message=?, updated_at=? WHERE ID=?", (postToAdd.message, postToAdd.updated_at, postToAdd.ID))
