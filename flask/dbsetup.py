@@ -34,6 +34,11 @@ def DBsetup():
 		category_name text not null
 	)""")
 
+	categories= dict([("Events & Activities", 1),("News & Information", 5),("Learning & Development", 2),("Service Notifications", 4),("Job Opportunities, Internships & Volunteering", 7),("Deadlines", 3),("Discounts, Deals & Promotions", 6),("Policies", 9)])
+
+	for k, v in categories.items():
+		c.execute("INSERT INTO categories VALUES (:category_id, :category_name)", {"category_id":v, "category_name":k})
+
 	conn.commit()
 	conn.close()
 
