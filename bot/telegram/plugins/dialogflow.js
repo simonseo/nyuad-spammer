@@ -1,6 +1,6 @@
 'use strict';
 
-const apiai = require('apiai');
+const dialogflow = require('apiai');
 const uuid = require('node-uuid');
 const config = require('config');
 
@@ -12,7 +12,7 @@ module.exports = {
 
   plugin(bot, pluginConfig){
 
-    const apiAiService = apiai(config.get('api_token'), {language: 'en', requestSource: 'telegram'});
+    const dialogflowService = dialogflow(config.get('api_token'), {language: 'en', requestSource: 'telegram'});
     const sessionIds = new Map();
 
     function isDefined(obj) {
@@ -34,11 +34,11 @@ module.exports = {
         sessionIds.set(sender, {sessionId: uuid.v4()});
       }
 
-      let apiaiRequest = apiAiService.textRequest(text, {
+      let dialogflowRequestquest = dialogflowService.textRequest(text, {
         sessionId: sessionIds.get(sender).sessionId
       });
 
-      apiaiRequest.on('response', (response) => {
+      dialogflowRequestquest.on('response', (response) => {
         if (isDefined(response.result) && isDefined(response.result.fulfillment)) {
           let responseText = response.result.fulfillment.speech;
 
@@ -54,8 +54,8 @@ module.exports = {
         }
       });
 
-      apiaiRequest.on('error', (error) => console.error(error));
-      apiaiRequest.end();
+      dialogflowRequestquest.on('error', (error) => console.error(error));
+      dialogflowRequestquest.end();
 
     });
   }
