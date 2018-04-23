@@ -1,10 +1,21 @@
 'use strict';
 
-const config = require('config');
-const axios = require('axios');
-const jwt = require('jsonwebtoken');
+var TurndownService = require('turndown');
+var turndownService = new TurndownService();
+var markdown = turndownService.turndown('<p><strong>Film Screening | Just Another Accent&nbsp;</strong></p> '+
+'<p><em>Tonight April 5 @ 7:00 PM, A6 Building, room 008</em></p> '+
+'<p><em><strong><a href="http://nyuadi.force.com/Events/NYUEventRegistration?event=J8jmAFmk2GDbDDVrwaos0A_3D_3D">RSVP HERE</a></strong></em></p> '+
 
-const SECRET = config.get('secret');
+'<p>The documentary aims to raise awareness of stuttering and wipe off the stigma that has long been attached to it. The film also follows Farah Al Qaissieh&rsquo;s journey in supporting the stutter community through her non-profit organization of Stutter UAE and the features other people who stutter and the issues they face in everyday life.</p>'+
+
+'<p>[Director: Khadija Kudsi &amp; Samia Ali | UAE | 2016 | 15 mins | Arabic w/ English Subtitles]</p>'+
+
+'<p><em><strong>Screening followed by Q&amp;A with the film&rsquo;s lead star Farah Al Qaissieh</strong></em></p>'+
+
+'<p>&nbsp;</p>')
+
+const config = require('config');
+
 
 module.exports = (bot) => {
 
@@ -100,6 +111,10 @@ module.exports = (bot) => {
 
   bot.on('postback:MENU_UNSUBSCRIBE', (payload, chat) => {
     const userID = payload.sender.id;
+
+    console.log(markdown);
+
+    chat.say(markdown);
 
     chat.conversation((convo) => {
       convo.set('userID', userID);
