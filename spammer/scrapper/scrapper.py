@@ -2,11 +2,11 @@
 # -*- coding: utf-8 -*- 
 # @File Name: scrapper.py
 # @Created:   2018-04-11 02:57:12  Simon Myunggun Seo (simon.seo@nyu.edu) 
-# @Updated:   2018-04-11 22:21:20  Simon Seo (simon.seo@nyu.edu)
+# @Updated:   2018-04-18 17:08:14  Simon Seo (simon.seo@nyu.edu)
 import sys, time
 sys.path.insert(0,'..')
 from duo import duo
-from secrets import NYU_NETID, NYU_PASSWORD
+from scrapper.secrets import NYU_NETID, NYU_PASSWORD
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -59,18 +59,17 @@ def getAnnouncementJson(driver):
 	jsonStr = driver.find_element_by_tag_name('body').text
 	return jsonStr
 
-def main():
-	while(True):
-		with headlessDriver() as driver:
-			jsonStr = getAnnouncementJson(driver)
+def send(jsonStr):
+	print(jsonStr[:100])
+	# write code to send jsonStr to DB server here...
 
-		# write code to send jsonStr to DB server here...
-
-		time.sleep(5*60) # 5 minutes
-
-
-if __name__ == '__main__':
+def run(forEvery=5*60):
 	with headlessDriver() as driver:
 		jsonStr = getAnnouncementJson(driver)
-		print(jsonStr[:500])
-	
+	send(jsonStr)
+	time.sleep(forEvery) # 5 minutes
+
+if __name__ == '__main__':
+	run(forEvery=5)
+
+
