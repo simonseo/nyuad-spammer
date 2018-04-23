@@ -41,11 +41,6 @@ bot.setPersistentMenu([
     title: 'Unsubscribe',
     type: 'postback',
     payload: 'MENU_UNSUBSCRIBE'
-  },
-  {
-    title: 'Current Subscriptions',
-    type: 'postback',
-    payload: 'MENU_CURRENT'
   }
 ]);
 
