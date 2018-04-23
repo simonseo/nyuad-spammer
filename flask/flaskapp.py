@@ -4,9 +4,10 @@ from secret import HOSTADDRESS
 from werkzeug import secure_filename
 from readCSV import ReadCSV
 import databaseOperations as db
-import sqlite3 
+import sqlite3
 import os
-import json, json2csv
+import json
+import csv
 
 UPLOAD_FOLDER = 'uploads'
 
@@ -60,8 +61,21 @@ def postJson():
 	print(json.loads(request.data)) # JSON String
 	print(type(json.loads(request.data))) # python dict
 
-	# Save JSON data as CSV here... 
+	# Save JSON data as CSV here...
 	# Maybe with json2csv module...
+	json_parsed = json.loads(request.data)
+
+	# will change variable names later
+	new_data = open('/new.csv', 'w')
+	csvwriter = csv.writer(request.data)
+	count = 0
+	for req in request.data:
+		if count == 0:
+			header = req.keys()
+			csvwriter.writerow(header)
+			count +=1
+		csvwriter.writerow(req.values())
+	request.data.close()
 
 	db.injectData(ReadCSV(filename))
 	return Response('We recieved something…')
