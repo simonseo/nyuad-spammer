@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*- 
 # @File Name: duo_test.py
 # @Created:   2018-04-12 00:11:28  Simon Myunggun Seo (simon.seo@nyu.edu) 
-# @Updated:   2018-04-12 01:21:16  Simon Seo (simon.seo@nyu.edu)
+# @Updated:   2018-04-18 17:51:48  Simon Seo (simon.seo@nyu.edu)
 
-from duo import duo
+from spammer.duo import duo
 
 
 def testSecretJsonHasRightKeys():
