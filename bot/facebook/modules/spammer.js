@@ -3,15 +3,15 @@
 var sqlite3 = require('sqlite3').verbose();
 var db;
 
-var TurndownService = require('turndown');
-var turndownService = new TurndownService();
-var markdown = turndownService.turndown('<p><strong>Film Screening | Just Another Accent&nbsp;</strong></p> '+
-'<p><em>Tonight April 5 @ 7:00 PM, A6 Building, room 008</em></p> '+
-'<p><em><strong><a href="http://nyuadi.force.com/Events/NYUEventRegistration?event=J8jmAFmk2GDbDDVrwaos0A_3D_3D">RSVP HERE</a></strong></em></p> '+
-'<p>The documentary aims to raise awareness of stuttering and wipe off the stigma that has long been attached to it. The film also follows Farah Al Qaissieh&rsquo;s journey in supporting the stutter community through her non-profit organization of Stutter UAE and the features other people who stutter and the issues they face in everyday life.</p>'+
-'<p>[Director: Khadija Kudsi &amp; Samia Ali | UAE | 2016 | 15 mins | Arabic w/ English Subtitles]</p>'+
-'<p><em><strong>Screening followed by Q&amp;A with the film&rsquo;s lead star Farah Al Qaissieh</strong></em></p>'+
-'<p>&nbsp;</p>')
+// var TurndownService = require('turndown');
+// var turndownService = new TurndownService();
+// var markdown = turndownService.turndown('<p><strong>Film Screening | Just Another Accent&nbsp;</strong></p> '+
+// '<p><em>Tonight April 5 @ 7:00 PM, A6 Building, room 008</em></p> '+
+// '<p><em><strong><a href="http://nyuadi.force.com/Events/NYUEventRegistration?event=J8jmAFmk2GDbDDVrwaos0A_3D_3D">RSVP HERE</a></strong></em></p> '+
+// '<p>The documentary aims to raise awareness of stuttering and wipe off the stigma that has long been attached to it. The film also follows Farah Al Qaissieh&rsquo;s journey in supporting the stutter community through her non-profit organization of Stutter UAE and the features other people who stutter and the issues they face in everyday life.</p>'+
+// '<p>[Director: Khadija Kudsi &amp; Samia Ali | UAE | 2016 | 15 mins | Arabic w/ English Subtitles]</p>'+
+// '<p><em><strong>Screening followed by Q&amp;A with the film&rsquo;s lead star Farah Al Qaissieh</strong></em></p>'+
+// '<p>&nbsp;</p>')
 
 module.exports = (bot) => {
 
@@ -19,50 +19,43 @@ module.exports = (bot) => {
     return;
   }
 
-  const generateDatabase = (convo) => {
+  //still need to check for duplicate values
+  const updateTable = (convo) => {
+    console.log("Open Database");
+    let db = new sqlite3.Database('./database/spammerDatabase.db')
 
-    function createDatabase() {
-        //Creating Spammer Database
-        console.log("Creating Spammer Database");
-        db = new sqlite3.Database('spammerDatabase', createTable);
+    //if first time insert into user table
+    console.log("Inserting into User Table");
+    var user = db.prepare("INSERT INTO users VALUES (?, ?)");
+    user.run(convo.get('userID'), '0');
+    user.finalize(readUserValues);
+
+    function readUserValues() {
+      console.log("Reading values");
+      db.all("SELECT userid, timestamp FROM users", function(err, rows) {
+          rows.forEach(function (row) {
+              console.log(row.userid + ": " + row.timestamp);
+          });
+      });
     }
 
-    function createTable() {
-        //Do not modify "CREATE TABLE IF NOT EXISTS userTable (info TEXT)"
-        console.log("Creating User Table");
-        db.run("CREATE TABLE IF NOT EXISTS userTable (info TEXT)", insertIDs);
+    //else just update the subscription table
+    console.log("Inserting into User Subscription Table");
+    var subscription = db.prepare("INSERT INTO userSubscription VALUES (?, ?)");
+    subscription.run(convo.get('userID'), convo.get('userCategory'));
+    subscription.finalize(readSubscriptionValues);
+
+    function readSubscriptionValues() {
+      console.log("Reading values");
+      db.all("SELECT userid, categoryString FROM userSubscription", function(err, rows) {
+          rows.forEach(function (row) {
+              console.log(row.userid + ": " + row.categoryString);
+          });
+      });
     }
 
-    function insertIDs() {
-        //Do not modify "SELECT rowid AS id, info FROM userTable"
-        console.log("Inserting userIDs");
-        var userIDs = db.prepare("INSERT INTO userTable VALUES (?)");
-        userIDs.run(convo.get('userID'));
-        userIDs.finalize(readValues);
-
-        //still need to check for dups
-    }
-
-    function readValues() {
-        //Do not modify "SELECT rowid AS id, info FROM userTable"
-        console.log("Reading values");
-        db.all("SELECT rowid AS id, info FROM userTable", function(err, rows) {
-            rows.forEach(function (row) {
-                console.log(row.id + ": " + row.info);
-            });
-            closeDatabase();
-        });
-    }
-
-    function closeDatabase() {
-        //Close database
-        console.log("Closing Database");
-        db.close();
-    }
-
-    createDatabase();
-
-    return;
+    console.log("Close database");
+    db.close();
   }
 
   const subscribeToCategory = (convo) => {
@@ -70,11 +63,12 @@ module.exports = (bot) => {
     convo.ask(doNothing, (payload, convo) => {
       const userCategory = payload.message.text;
 
+      //check if category is in table
       if (userCategory == "studentlife"){
         convo.set('userCategory', userCategory);
         console.log(userCategory);
 
-        generateDatabase(convo);
+        updateTable(convo);
         return;
       }
 
@@ -107,10 +101,6 @@ module.exports = (bot) => {
 
   bot.on('postback:MENU_SUBSCRIBE', (payload, chat) => {
     const userID = payload.sender.id;
-    console.log(payload.timestamp);
-
-    chat.say(markdown);
-    console.log(markdown);
 
     chat.conversation((convo) => {
       convo.set('userID', userID);
@@ -125,6 +115,10 @@ module.exports = (bot) => {
 
   bot.on('postback:MENU_UNSUBSCRIBE', (payload, chat) => {
     const userID = payload.sender.id;
+
+    // chat.say(markdown);
+    // console.log(markdown);
+
 
     chat.conversation((convo) => {
       convo.set('userID', userID);
