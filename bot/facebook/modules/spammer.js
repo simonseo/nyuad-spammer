@@ -23,7 +23,6 @@ module.exports = (bot) => {
     console.log("Open Database");
     let db = new sqlite3.Database('./database/spammerDatabase.db');
 
-    //if first time insert into user table
     console.log("Inserting into User Table");
     var user = db.prepare("INSERT OR IGNORE INTO users VALUES (?, ?)");
     user.run(convo.get('userID'), '0');
@@ -36,9 +35,28 @@ module.exports = (bot) => {
         });
     });
 
+    var list = ['studentlife', 'resed'];
+    var newlist = [];
+
+    for (var i=0; i<list.length; i++){
+
+      let string = list[i];
+
+      let sql = 'SELECT categoryid FROM categories WHERE categoryString = ?';
+
+      db.each(sql, [string], (err, row) => {
+        if (err){
+          throw err;
+        }
+        console.log(`${row.categoryid}`);
+        newlist.push(`${row.categoryid}`);
+      });
+
+    }
+
     console.log("Inserting into User Subscription Table");
-    var subscription = db.prepare("INSERT INTO userSubscription VALUES (?, ?)");
-    subscription.run(convo.get('userID'), "studentlife");
+    var subscription = db.prepare("INSERT OR IGNORE INTO userSubscription VALUES (?, ?)");
+    subscription.run(convo.get('userID'), newlist);
     subscription.finalize();
 
     console.log("Reading values");
@@ -55,6 +73,15 @@ module.exports = (bot) => {
   }
 
   const subscribeToCategory = (convo) => {
+
+    // convo.ask(doNothing, (payload, convo) => {
+    //
+    //   const message = payload.message.text;
+    //   const fields = message.split(',').toLowerCase();
+    //
+    //   convo.set('fields', fields);
+    //
+    // });
 
     addUserToTable(convo);
     return;
@@ -103,7 +130,9 @@ module.exports = (bot) => {
     chat.conversation((convo) => {
       convo.set('userID', userID);
 
-      chat.say('Type the name of the category you wish to be subscribed to', { typing: true });
+      chat.say('The categories are: student life, athletics, residential education', { typing:true });
+      chat.say('Type the name of the category you wish to be subscribed to separated by commas (ex. studentlife, athletics)', { typing: true });
+
       subscribeToCategory(convo);
 
       return;
@@ -127,5 +156,6 @@ module.exports = (bot) => {
       return;
     });
   });
+
 
 };
