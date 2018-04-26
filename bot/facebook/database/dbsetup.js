@@ -10,7 +10,7 @@ function createDatabase() {
 
 function createUsersTable() {
   console.log("Creating Users Table");
-  db.run("CREATE TABLE IF NOT EXISTS users (userid TEXT NOT NULL, timestamp TEXT NOT NULL)");
+  db.run("CREATE TABLE IF NOT EXISTS users (userid TEXT NOT NULL, timestamp TEXT NOT NULL, UNIQUE (userid))");
 }
 
 function createCategoriesTable() {

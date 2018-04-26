@@ -19,65 +19,63 @@ module.exports = (bot) => {
     return;
   }
 
-  //still need to check for duplicate values
-  const updateTable = (convo) => {
+  const addUserToTable = (convo) => {
     console.log("Open Database");
-    let db = new sqlite3.Database('./database/spammerDatabase.db')
+    let db = new sqlite3.Database('./database/spammerDatabase.db');
 
     //if first time insert into user table
     console.log("Inserting into User Table");
-    var user = db.prepare("INSERT INTO users VALUES (?, ?)");
+    var user = db.prepare("INSERT OR IGNORE INTO users VALUES (?, ?)");
     user.run(convo.get('userID'), '0');
-    user.finalize(readUserValues);
+    user.finalize();
 
-    function readUserValues() {
-      console.log("Reading values");
-      db.all("SELECT userid, timestamp FROM users", function(err, rows) {
-          rows.forEach(function (row) {
-              console.log(row.userid + ": " + row.timestamp);
-          });
-      });
-    }
+    console.log("Reading values");
+    db.all("SELECT userid, timestamp FROM users", function(err, rows) {
+        rows.forEach(function (row) {
+            console.log(row.userid + ": " + row.timestamp);
+        });
+    });
 
-    //else just update the subscription table
     console.log("Inserting into User Subscription Table");
     var subscription = db.prepare("INSERT INTO userSubscription VALUES (?, ?)");
-    subscription.run(convo.get('userID'), convo.get('userCategory'));
-    subscription.finalize(readSubscriptionValues);
+    subscription.run(convo.get('userID'), "studentlife");
+    subscription.finalize();
 
-    function readSubscriptionValues() {
-      console.log("Reading values");
-      db.all("SELECT userid, categoryString FROM userSubscription", function(err, rows) {
-          rows.forEach(function (row) {
-              console.log(row.userid + ": " + row.categoryString);
-          });
-      });
-    }
+    console.log("Reading values");
+    db.all("SELECT userid, categoryString FROM userSubscription", function(err, rows) {
+        rows.forEach(function (row) {
+            console.log(row.userid + ": " + row.categoryString);
+        });
+    });
 
     console.log("Close database");
     db.close();
+
+    return;
   }
 
   const subscribeToCategory = (convo) => {
 
-    convo.ask(doNothing, (payload, convo) => {
-      const userCategory = payload.message.text;
+    addUserToTable(convo);
+    return;
 
-      //check if category is in table
-      if (userCategory == "studentlife"){
-        convo.set('userCategory', userCategory);
-        console.log(userCategory);
+    // convo.ask(doNothing, (payload, convo) => {
+    //   const userCategory = payload.message.text;
 
-        updateTable(convo);
-        return;
-      }
+      // if (userCategory == "studentlife"){
+      //   convo.set('userCategory', userCategory);
+      //   console.log(userCategory);
 
-      else {
-        convo.say("This category is not found in Student Portal. Click the subscribe button to try again!", { typing: true });
-        convo.end();
-      }
+        // addToTable(convo);
+        // return;
+      // }
+      //
+      // else {
+      //   convo.say("This category is not found in Student Portal. Click the subscribe button to try again!", { typing: true });
+      //   convo.end();
+      // }
 
-    });
+    // });
   };
 
   const unsubscribeToCategory = (convo) => {
