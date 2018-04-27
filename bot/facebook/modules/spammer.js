@@ -20,54 +20,77 @@ module.exports = (bot) => {
   }
 
   const addUserToTable = (convo) => {
-    console.log("Open Database");
-    let db = new sqlite3.Database('./database/spammerDatabase.db');
 
-    console.log("Inserting into User Table");
-    var user = db.prepare("INSERT OR IGNORE INTO users VALUES (?, ?)");
-    user.run(convo.get('userID'), '0');
-    user.finalize();
+    function openDatabase(){
+      //Open database
+      console.log("Open Database");
+      db = new sqlite3.Database('./database/spammerDatabase.db');
 
-    console.log("Reading values");
-    db.all("SELECT userid, timestamp FROM users", function(err, rows) {
-        rows.forEach(function (row) {
-            console.log(row.userid + ": " + row.timestamp);
-        });
-    });
-
-    var list = ['studentlife', 'resed'];
-    var newlist = [];
-
-    for (var i=0; i<list.length; i++){
-
-      let string = list[i];
-
-      let sql = 'SELECT categoryid FROM categories WHERE categoryString = ?';
-
-      db.each(sql, [string], (err, row) => {
-        if (err){
-          throw err;
-        }
-        console.log(`${row.categoryid}`);
-        newlist.push(`${row.categoryid}`);
-      });
-
+      insertToUserTable();
     }
 
-    console.log("Inserting into User Subscription Table");
-    var subscription = db.prepare("INSERT OR IGNORE INTO userSubscription VALUES (?, ?)");
-    subscription.run(convo.get('userID'), newlist);
-    subscription.finalize();
+    function insertToUserTable(){
+      //Inserting for the first time into user table
+      console.log("Inserting into User Table");
+      var user = db.prepare("INSERT OR IGNORE INTO users VALUES (?, ?)");
+      user.run(convo.get('userID'), '0');
+      user.finalize(readUserValues);
+    }
 
-    console.log("Reading values");
-    db.all("SELECT userid, categoryString FROM userSubscription", function(err, rows) {
-        rows.forEach(function (row) {
-            console.log(row.userid + ": " + row.categoryString);
+    function readUserValues(){
+      console.log("Printing user table values");
+      db.all("SELECT userid, timestamp FROM users", function(err, rows) {
+          rows.forEach(function (row) {
+              console.log(row.userid + ": " + row.timestamp);
+
+              insertToSubscriptionTable();
+          });
+      });
+    }
+
+    function insertToSubscriptionTable(){
+      //Getting the categoryid from categories table
+      var newlist = [];
+      var list = ['athletics', 'resed'];
+      var categories;
+
+      for (var i=0; i<list.length; i++){
+        let string = list[i];
+        db.each("SELECT categoryid FROM categories WHERE categoryString = ?", [string], (err, row) => {
+          if (err){
+            throw err;
+          }
+          newlist.push(`${row.categoryid}`);
+
+          if (newlist.length == list.length){
+            categories = newlist.join(',');
+
+            //Inserting for the first time into user subscription table
+            console.log("Inserting into User Subscription Table");
+            var subscription = db.prepare("INSERT OR IGNORE INTO userSubscription VALUES (?, ?)");
+            subscription.run(convo.get('userID'), categories);
+            subscription.finalize(readUserSubscriptionValues);
+          }
         });
-    });
+      }
+    }
 
-    console.log("Close database");
-    db.close();
+    function readUserSubscriptionValues(){
+      console.log("Printing user subscription values");
+      db.all("SELECT userid, categoryid FROM userSubscription", function(err, rows) {
+          rows.forEach(function (row) {
+              console.log(row.userid + ": " + row.categoryid);
+              closeDatabase();
+          });
+      });
+    }
+
+    function closeDatabase(){
+      console.log("Close database");
+      db.close();
+    }
+
+    openDatabase();
 
     return;
   }
@@ -84,7 +107,7 @@ module.exports = (bot) => {
     // });
 
     addUserToTable(convo);
-    return;
+    convo.end();
 
     // convo.ask(doNothing, (payload, convo) => {
     //   const userCategory = payload.message.text;

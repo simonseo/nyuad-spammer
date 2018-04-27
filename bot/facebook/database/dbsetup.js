@@ -41,7 +41,7 @@ function readValues() {
 
 function createUserSubscriptionsTable() {
   console.log("Creating User Subscription Table");
-  db.run("CREATE TABLE IF NOT EXISTS userSubscription (userid TEXT NOT NULL, categoryString TEXT NOT NULL, UNIQUE (userid))");
+  db.run("CREATE TABLE IF NOT EXISTS userSubscription (userid TEXT NOT NULL, categoryid TEXT NOT NULL, UNIQUE (userid))");
 }
 
 function closeDatabase() {
