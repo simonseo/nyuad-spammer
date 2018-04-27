@@ -24,19 +24,14 @@ bot.setGetStartedButton((payload, chat) => {
 
 bot.setPersistentMenu([
   {
-    title: 'Updates',
+    title: 'Menu',
     type: 'postback',
     payload: 'MENU_UPDATES'
   },
   {
-    title: 'Subscribe',
+    title: 'Update Subscription',
     type: 'postback',
-    payload: 'MENU_SUBSCRIBE'
-  },
-  {
-    title: 'Unsubscribe',
-    type: 'postback',
-    payload: 'MENU_UNSUBSCRIBE'
+    payload: 'MENU_UPDATE_SUBSCRIPTION'
   }
 ]);
 

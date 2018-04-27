@@ -19,14 +19,12 @@ module.exports = (bot) => {
     return;
   }
 
-  const addUserToTable = (convo) => {
+  const addSubscriptionsToTable = (convo) => {
 
     function openDatabase(){
       //Open database
       console.log("Open Database");
       db = new sqlite3.Database('./database/spammerDatabase.db');
-
-      insertToUserTable();
     }
 
     function insertToUserTable(){
@@ -43,8 +41,6 @@ module.exports = (bot) => {
       db.all("SELECT userid, timestamp FROM users", function(err, rows) {
           rows.forEach(function (row) {
               console.log(row.userid + ": " + row.timestamp);
-
-              insertToSubscriptionTable();
           });
       });
     }
@@ -87,62 +83,42 @@ module.exports = (bot) => {
     }
 
     function readUserSubscriptionValues(){
-      //Reading user subscription table values
       console.log("Printing user subscription values");
       db.all("SELECT userid, categoryid FROM userSubscription", function(err, rows) {
           rows.forEach(function (row) {
               console.log(row.userid + ": " + row.categoryid);
-              closeDatabase();
           });
       });
     }
 
     function closeDatabase(){
-      //Closing database
       console.log("Close database");
       db.close();
     }
 
     openDatabase();
+    insertToUserTable();
+    insertToSubscriptionTable();
+    closeDatabase();
 
     return;
   }
 
-  const subscribeToCategory = (convo) => {
+  const updateCategories = (convo) => {
 
     convo.ask(doNothing, (payload, convo) => {
 
       const userFields = payload.message.text;
       const updatedFields = userFields.toLowerCase().replace(/\s/g, '');
-
       convo.set('fields', updatedFields);
 
-      addUserToTable(convo);
+      addSubscriptionsToTable(convo);
       convo.end();
 
     });
   };
 
-  const unsubscribeToCategory = (convo) => {
-
-    // convo.ask(doNothing, (payload, convo) => {
-    //   const userCategory = payload.message.text;
-    //
-    //   if (userCategory == "studentlife"){
-    //     convo.set('userCategory', userCategory);
-    //     console.log(userCategory);
-    //     return;
-    //   }
-    //
-    //   else {
-    //     convo.say("This category is not found in Student Portal. Click the unsubscribe button to try again!", { typing: true });
-    //     convo.end();
-    //   }
-    //
-    // });
-  };
-
-  bot.on('postback:MENU_SUBSCRIBE', (payload, chat) => {
+  bot.on('postback:MENU_UPDATE_SUBSCRIPTION', (payload, chat) => {
     const userID = payload.sender.id;
 
     chat.conversation((convo) => {
@@ -151,29 +127,9 @@ module.exports = (bot) => {
       chat.say('Our current categories are: student life, athletics, and resed', { typing:true });
       chat.say('Type all the names of the categories you wish to be subscribed to separated by commas. (ex. studentlife, athletics). This information will be updated everytime you chose to subscribe.', { typing: true });
 
-      subscribeToCategory(convo);
-
+      updateCategories(convo);
       return;
     });
   });
-
-
-  bot.on('postback:MENU_UNSUBSCRIBE', (payload, chat) => {
-    const userID = payload.sender.id;
-
-    // chat.say(markdown);
-    // console.log(markdown);
-
-
-    chat.conversation((convo) => {
-      convo.set('userID', userID);
-
-      chat.say('Type the name of the category you wish to be unsubscribed from', { typing: true });
-      unsubscribeToCategory(convo);
-
-      return;
-    });
-  });
-
 
 };
