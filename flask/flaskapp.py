@@ -3,6 +3,7 @@ from post import Post
 from secret import HOSTADDRESS
 from werkzeug import secure_filename
 from readCSV import ReadCSV
+from dbsetup import DBsetup
 import databaseOperations as db
 import sqlite3
 import os
@@ -44,16 +45,16 @@ def getCSV():
 			file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 			db.injectData(ReadCSV(filename))
 			return "upload successful"
-
-	return '''
-	<!doctype html>
-	<title>Upload new File</title>
-	<h1>Upload new File</h1>
-	<form method=post enctype=multipart/form-data>
-	  <p><input type=file name=file>
-		 <input type=submit value=Upload>
-	</form>
-	'''
+	return "Invalid use"
+	# return '''
+	# <!doctype html>
+	# <title>Upload new File</title>
+	# <h1>Upload new File</h1>
+	# <form method=post enctype=multipart/form-data>
+	#   <p><input type=file name=file>
+	# 	 <input type=submit value=Upload>
+	# </form>
+	# '''
 
 @app.route("/postJson", methods=['POST'])
 def postJson():
@@ -81,4 +82,5 @@ def postJson():
 	return Response('We recieved something…')
 
 if __name__ == "__main__":
+	DBsetup()
 	app.run()#host=HOSTADDRESS, port=80)

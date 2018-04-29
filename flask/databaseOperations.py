@@ -1,12 +1,28 @@
 import sqlite3
 from post import Post
+from datetime import datetime as dt
 
 def addpost(data):
 	postToAdd=Post(data)
 	conn = sqlite3.connect('posts.db')
 	c = conn.cursor()
+
 	with conn:
-		c.execute("INSERT INTO posts VALUES (:alert,:alert_end,:alert_end_date,:alert_end_time,:alert_start,:alert_start_date,:alert_start_time,:audience_0,:audience_1,:audience_2,:category_id,:category_name,:created_at,:editable,:email,:expiration_date,:fullname,:ID,:location_0,:location_1,:message,:owner,:publish_date,:republished_at,:title,:topic,:updated,:updated_at)", {"alert":postToAdd.alert, "alert_end":postToAdd.alert_end, "alert_end_date":postToAdd.alert_end_date, "alert_end_time":postToAdd.alert_end_time, "alert_start":postToAdd.alert_start, "alert_start_date":postToAdd.alert_start_date, "alert_start_time":postToAdd.alert_start_time, "audience_0":postToAdd.audience_0, "audience_1":postToAdd.audience_1, "audience_2":postToAdd.audience_2, "category_id":postToAdd.category_id, "category_name":postToAdd.category_name, "created_at":postToAdd.created_at, "editable":postToAdd.editable, "email":postToAdd.email, "expiration_date":postToAdd.expiration_date, "fullname":postToAdd.fullname, "ID":postToAdd.ID, "location_0":postToAdd.location_0, "location_1":postToAdd.location_1, "message":postToAdd.message, "owner":postToAdd.owner, "publish_date":postToAdd.publish_date, "republished_at":postToAdd.republished_at, "title":postToAdd.title, "topic":postToAdd.topic, "updated":postToAdd.updated, "updated_at":postToAdd.updated_at})
+		c.execute("SELECT updated,updated_at FROM posts WHERE ID=:ID", {'ID': postToAdd.ID})
+	x=c.fetchone()
+
+	if x:
+		if x[0]=='1':
+			savedTime=dt.strptime(x[1], "%Y-%m-%d %H:%M:%S")
+			toAddTime=dt.strptime(postToAdd.updated_at, "%Y-%m-%d %H:%M:%S")
+			if toAddTime > savedTime:
+				print("Time replaced for post ID "+ postToAdd.ID)
+				with conn:
+					c.execute("UPDATE posts SET message=?, updated_at=? WHERE ID=?", (postToAdd.message, postToAdd.updated_at, postToAdd.ID))
+	else:
+		with conn:
+			c.execute("INSERT INTO posts VALUES (:category_id, :category_name, :created_at, :email, :fullname, :ID, :message, :publish_date, :title, :topic, :updated, :updated_at)", {"category_id":postToAdd.category_id, "category_name":postToAdd.category_name, "created_at":postToAdd.created_at, "email":postToAdd.email, "fullname":postToAdd.fullname, "ID":postToAdd.ID, "message":postToAdd.message, "publish_date":postToAdd.publish_date, "title":postToAdd.title, "topic":postToAdd.topic, "updated":postToAdd.updated, "updated_at":postToAdd.updated_at})
+
 	conn.commit()
 	conn.close()
 	return "post added"
