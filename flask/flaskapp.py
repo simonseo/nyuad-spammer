@@ -1,6 +1,5 @@
 from flask import Flask, request, Response, redirect, url_for, send_from_directory
 from post import Post
-from secret import HOSTADDRESS
 from werkzeug import secure_filename
 from readCSV import ReadCSV
 from dbsetup import DBsetup
@@ -58,28 +57,25 @@ def getCSV():
 
 @app.route("/postJson", methods=['POST'])
 def postJson():
-	print('Recieved from client: {}'.format(request.data)) # JSON byte-String
-	print(json.loads(request.data)) # JSON String
-	print(type(json.loads(request.data))) # python dict
-
 	# Save JSON data as CSV here...
-	# Maybe with json2csv module...
-	json_parsed = json.loads(request.data)
+	json_parsed = json.loads(request.json)
 
 	# will change variable names later
-	new_data = open('/new.csv', 'w')
-	csvwriter = csv.writer(request.data)
+	filename = 'new.csv'
+	new_data = open(filename, 'w')
+	csvwriter = csv.writer(new_data)
 	count = 0
-	for req in request.data:
+	for announcement in json_parsed["announcements"]:
 		if count == 0:
-			header = req.keys()
+			header = announcement.keys()
 			csvwriter.writerow(header)
 			count +=1
-		csvwriter.writerow(req.values())
-	request.data.close()
+		csvwriter.writerow(announcement.values())
+	new_data.close()
 
+	# Put data into DB
 	db.injectData(ReadCSV(filename))
-	return Response('We recieved something…')
+	return Response('We recieved something...')
 
 if __name__ == "__main__":
 	DBsetup()
