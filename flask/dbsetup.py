@@ -22,7 +22,7 @@ def DBsetup():
 
 	c.execute("""CREATE TABLE IF NOT EXISTS users (
 		userID text not null unique,
-		last_updated text not null
+		last_updated integer not null
 	)""")
 
 	c.execute("""CREATE TABLE IF NOT EXISTS userSubscriptions (
@@ -36,7 +36,7 @@ def DBsetup():
 	)""")
 
 	topics= dict( [("Academics", 1), ("Environmental Health and Safety", 2), ("Intercultural Affairs", 3), ("Events and Activities", 4), ("Student Activities", 5), ("Dining", 6), ("Community Outreach", 7), ("Fitness Center", 8), ("Research", 9), ("Campus Life", 10), ("Athletics", 11), ("Registrar", 12), ("Community Life", 13), ("First-Year Office", 14), ("Career Development", 15), ("Academic Affairs", 16), ("Spiritual Life", 17), ("Library", 18), ("Communications", 19), ("Finance", 20), ("NYUAD Services", 21), ("Residential Education", 22), ("Global Education", 23), ("Mentoring", 24), ("Admissions", 25), ("Around Abu Dhabi", 26), ("Grants", 27), ("Bookstore", 28), ("Facilities", 29), ("Health and Welness", 30), ("Housing", 31), ("Human Resources", 32), ("Mail", 33), ("Public Safety", 34), ("Technology", 35), ("Transportation", 36), ("Travel", 37), ("Operations", 38), ("Students Abroad", 39)])
-		
+
 	for k, v in topics.items():
 		c.execute("INSERT INTO topics VALUES (:topic_id, :topic)", {"topic_id":v, "topic":k})
 

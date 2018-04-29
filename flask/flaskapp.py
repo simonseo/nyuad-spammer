@@ -22,6 +22,10 @@ def printall():
 # def addpost(IDToAdd,postToAdd):
 # 	return db.addpost(IDToAdd,postToAdd)
 
+@app.route("/addUser/<IDToAdd>")
+def addUser(IDToAdd):
+	return db.addUser(IDToAdd)
+
 @app.route("/getpost/<int:getID>")
 def getpost(getID):
 	return db.getpost(getID)
