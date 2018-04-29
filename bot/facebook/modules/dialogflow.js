@@ -20,8 +20,8 @@ module.exports = (bot) => {
   	const sender = payload.sender.id;
   	const text = payload.message.text;
 
-    if (data.captured) { 
-      return; 
+    if (data.captured) {
+      return;
     }
 
     if (!sessionIds.has(sender)) {
