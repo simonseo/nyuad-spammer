@@ -17,21 +17,26 @@ bot.setGetStartedButton((payload, chat) => {
   .then((user) => {
     chat.say(`Hello, ${user.first_name}! I am the NYUAD Spammer Bot. I am here to help you access Student Portal quickly and efficiently.`)
     .then(() => {
-      chat.say('To subscribe to notifications, or unsubscribe from them, just click the buttons from the menu.', { typing: true });
+      chat.say('To view the latest updates, subscribe to notifications, or unsubscribe from them, just click the buttons from the menu.', { typing: true });
     });
   });
 });
 
 bot.setPersistentMenu([
   {
-    title: 'Menu',
+    title: 'About',
+    type: 'postback',
+    payload: 'MENU_ABOUT'
+  },
+  {
+    title: 'Updates',
     type: 'postback',
     payload: 'MENU_UPDATES'
   },
   {
-    title: 'Update Subscription',
+    title: 'Subscriptions',
     type: 'postback',
-    payload: 'MENU_UPDATE_SUBSCRIPTION'
+    payload: 'MENU_SUBSCRIPTION'
   }
 ]);
 

@@ -1,7 +1,7 @@
 'use strict';
 
-var sqlite3 = require('sqlite3').verbose();
-var db;
+var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+var url = 'http://127.0.0.1:5000';
 
 // var TurndownService = require('turndown');
 // var turndownService = new TurndownService();
@@ -19,116 +19,128 @@ module.exports = (bot) => {
     return;
   }
 
-  const addSubscriptionsToTable = (convo) => {
+  ///////////////////////////////////////
+  //////////  SUBSCRIPTIONS /////////////
+  ///////////////////////////////////////
 
-    function openDatabase(){
-      //Open database
-      console.log("Open Database");
-      db = new sqlite3.Database('./database/spammerDatabase.db');
-    }
+  const addSubscriptionsToFlask = (convo) => {
 
-    function insertToUserTable(){
-      //Inserting for the first time into user table
-      console.log("Inserting into user table");
-      var user = db.prepare("INSERT OR IGNORE INTO users VALUES (?, ?)");
-      user.run(convo.get('userID'), '0');
-      user.finalize(readUserValues);
-    }
+    var userid = convo.get('userID');
+    var categoryNames = convo.get('categoryNames');
+    var params = {"userid": userid, "categoryNames": categoryNames};
 
-    function readUserValues(){
-      //Reading user table values
-      console.log("Printing user table values");
-      db.all("SELECT userid, timestamp FROM users", function(err, rows) {
-          rows.forEach(function (row) {
-              console.log(row.userid + ": " + row.timestamp);
-          });
-      });
-    }
+    var xmlHTTP = new XMLHttpRequest();
+    console.log(userid, categoryNames);
 
-    function insertToSubscriptionTable(){
-      //Getting the categoryid from categories table
-      var newlist = [];
-      var fields = convo.get('fields');
-      var fieldList = fields.split(',');
-      var categoryid;
+    xmlHTTP.open('POST', url, true);
+    xmlHTTP.send(JSON.stringify(params));
 
-      for (var i=0; i<fieldList.length; i++){
-        let string = fieldList[i];
+    xmlHTTP.onreadystatechange = processRequest;
 
-        db.each("SELECT categoryid FROM categories WHERE categoryString = ?", [string], (err, row) => {
-
-          if (err){
-            convo.say("Something went wrong, please try again by clicking the subscribe button from the menu.", { typing:true });
-            convo.end();
-          }
-
-          newlist.push(`${row.categoryid}`);
-
-          //need to check for values that are not in categories
-
-          if (newlist.length == fieldList.length){
-            categoryid = newlist.join(',');
-
-            //Inserting for the first time into user subscription table
-            console.log("Inserting into user subscription Table");
-            var subscription = db.prepare("INSERT OR REPLACE INTO userSubscription VALUES (?, ?)");
-            subscription.run(convo.get('userID'), categoryid);
-
-            convo.say("Perfect, you are now subscribed to: " + fields.replace(/,/g, ', '), { typing:true });
-            subscription.finalize(readUserSubscriptionValues);
-          }
-
-        });
+    function processRequest(e) {
+      if (xmlHTTP.readyState == 4 && xmlHTTP.status == 200) {
+          console.log(xmlHTTP.responseText);
+          convo.say("Perfect! Your subscriptions have been saved!", { typing:true });
       }
     }
-
-    function readUserSubscriptionValues(){
-      console.log("Printing user subscription values");
-      db.all("SELECT userid, categoryid FROM userSubscription", function(err, rows) {
-          rows.forEach(function (row) {
-              console.log(row.userid + ": " + row.categoryid);
-          });
-      });
-    }
-
-    function closeDatabase(){
-      console.log("Close database");
-      db.close();
-    }
-
-    openDatabase();
-    insertToUserTable();
-    insertToSubscriptionTable();
-    closeDatabase();
-
+    
     return;
+  }
+
+  const subscriptionCategories = (convo) => {
+
+    // var categoriesXML = new XMLHttpRequest();
+    // categoriesXML.open('GET', theUrl, true);
+    // categoriesXML.send();
+    // categoriesXML.onreadystatechange = processCategoriesRequest;
+    //
+    // function processCategoriesRequest(e) {
+    //     if (categoriesXML.readyState == 4 && categoriesXML.status == 200) {
+    //         var response = JSON.parse(categoriesXML.responseText);
+    //         convo.say(response.category_name, { typing:true });
+    //         convo.log(response.category_name);
+    //     }
+    // }
+
+    convo.say("Student portal, Athetlics, Resed, Education", { typing:true });
+    convo.say('Type all the names of the categories you wish to be subscribed to separated by commas. (ex. student life, athletics). This information will be updated everytime you chose to subscribe.', { typing: true });
+
+    convo.ask(doNothing, (payload, convo) => {
+      const categoryNames = payload.message.text;
+      const updatedCategoryNames = categoryNames.toLowerCase().replace(/\s/g, '');
+      convo.set('categoryNames', updatedCategoryNames);
+
+      addSubscriptionsToFlask(convo);
+      convo.end();
+    });
+  };
+
+  bot.on('postback:MENU_SUBSCRIPTION', (payload, chat) => {
+    const userID = payload.sender.id;
+    chat.conversation((convo) => {
+      convo.set('userID', userID);
+      chat.say('Our current categories are: ', { typing:true }).then(() => subscriptionCategories(convo));
+      return;
+    });
+  });
+
+  ///////////////////////////////////////
+  /////////////  UPDATES  ///////////////
+  ///////////////////////////////////////
+
+  const showUpdatesFromFlask = (convo) => {
+
+    //get request for updates on a category
   }
 
   const updateCategories = (convo) => {
 
+    // var categoriesXML = new XMLHttpRequest();
+    // categoriesXML.open('GET', theUrl, true);
+    // categoriesXML.send();
+    // categoriesXML.onreadystatechange = processCategoriesRequest;
+    //
+    // function processCategoriesRequest(e) {
+    //     if (categoriesXML.readyState == 4 && categoriesXML.status == 200) {
+    //         var response = JSON.parse(categoriesXML.responseText);
+    //         convo.say(response.category_name, { typing:true });
+    //         convo.log(response.category_name);
+    //     }
+    // }
+
+    convo.say("Student portal, Athetlics, Resed, Education", { typing:true });
+    convo.say('Type the name of the category you wish to see an update from', { typing: true });
+
     convo.ask(doNothing, (payload, convo) => {
+      const categoryNames = payload.message.text;
+      const updatedCategoryNames = categoryNames.toLowerCase().replace(/\s/g, '');
+      convo.set('categoryNames', updatedCategoryNames);
 
-      const userFields = payload.message.text;
-      const updatedFields = userFields.toLowerCase().replace(/\s/g, '');
-      convo.set('fields', updatedFields);
-
-      addSubscriptionsToTable(convo);
+      showUpdatesFromFlask(convo);
       convo.end();
-
     });
   };
 
-  bot.on('postback:MENU_UPDATE_SUBSCRIPTION', (payload, chat) => {
+  bot.on('postback:MENU_UPDATES', (payload, chat) => {
     const userID = payload.sender.id;
-
     chat.conversation((convo) => {
       convo.set('userID', userID);
-
-      chat.say('Our current categories are: student life, athletics, and resed', { typing:true });
-      chat.say('Type all the names of the categories you wish to be subscribed to separated by commas. (ex. studentlife, athletics). This information will be updated everytime you chose to subscribe.', { typing: true });
-
-      updateCategories(convo);
+      chat.say('Our current categories are: ', { typing:true }).then(() => updateCategories(convo));
       return;
+    });
+  });
+
+  ///////////////////////////////////////
+  /////////////   ABOUT   ///////////////
+  ///////////////////////////////////////
+
+  bot.on('postback:MENU_ABOUT', (payload, chat) => {
+    chat.getUserProfile()
+    .then((user) => {
+      chat.say(`Hey, ${user.first_name}! I know that acessing Student Portal can sometimes be a little bit annoying. With me, that will quickly go away!`, { typing:true })
+      .then(() => {
+        chat.say('Simply click the button from the menu to subscribe or unsubscribe from notifications from categories in Student Portal.', { typing:true });
+      });
     });
   });
 
