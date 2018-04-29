@@ -60,6 +60,8 @@ def printall():
 	return "All printed in terminal"
 
 def injectData(data):
+	# Assume first row of data is header
+	data.pop(0) # remove header
 	for row in data:
 		addpost(row)
 	return "All data inserted"

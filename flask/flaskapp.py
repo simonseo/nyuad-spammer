@@ -57,13 +57,8 @@ def getCSV():
 
 @app.route("/postJson", methods=['POST'])
 def postJson():
-	print('Recieved from client: {}'.format(request.data)) # JSON byte-String
-	print(json.loads(request.data)) # JSON String
-	print(type(json.loads(request.data))) # python dict
-
 	# Save JSON data as CSV here...
-	# Maybe with json2csv module...
-	json_parsed = json.loads(request.data)
+	json_parsed = json.loads(request.json)
 
 	# will change variable names later
 	filename = 'new.csv'
@@ -78,6 +73,7 @@ def postJson():
 		csvwriter.writerow(announcement.values())
 	new_data.close()
 
+	# Put data into DB
 	db.injectData(ReadCSV(filename))
 	return Response('We recieved something...')
 
