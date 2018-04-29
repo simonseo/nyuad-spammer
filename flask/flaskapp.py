@@ -79,7 +79,7 @@ def postJson():
 
 	# Put data into DB
 	db.injectData(ReadCSV(filename))
-	return Response('We recieved something...')
+	return Response('We received something...')
 
 if __name__ == "__main__":
 	DBsetup()
