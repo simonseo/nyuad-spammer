@@ -1,6 +1,7 @@
 import sqlite3
 from post import Post
 from datetime import datetime as dt
+import time
 
 def addpost(data):
 	postToAdd=Post(data)
@@ -79,10 +80,10 @@ def addUser(IDToAdd):
 	conn = sqlite3.connect('posts.db')
 	c = conn.cursor()
 	with conn:
-			c.execute("INSERT INTO users VALUES (?,?)",IDToAdd, int(time.time()))
+			c.execute("INSERT INTO users VALUES (?,?)",(IDToAdd, int(time.time())))
 	conn.commit()
 	conn.close()
-	return "post added"
+	return "user added"
 
 
 
