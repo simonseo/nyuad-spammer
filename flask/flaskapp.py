@@ -3,6 +3,7 @@ from post import Post
 from werkzeug import secure_filename
 from readCSV import ReadCSV
 from dbsetup import DBsetup
+from getUserSubs import getUserSubs
 import databaseOperations as db
 import sqlite3
 import os
@@ -13,6 +14,10 @@ UPLOAD_FOLDER = 'uploads'
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+@app.route("/getUserSubs/<userID>")
+def getUserSubscription(userID):
+	return getUserSubs(userID)
 
 @app.route("/printall")
 def printall():

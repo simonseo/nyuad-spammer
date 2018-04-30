@@ -5,7 +5,7 @@ class Post:
 		self.ID=data[0]
 		self.title=data[1]
 		self.message=data[2]
-		self.topic=data[3]
+		self.topic=data[3].lower().replace(" ","")
 		self.category_id=data[5]
 		self.publish_date=data[7]
 		self.fullname=data[10]
