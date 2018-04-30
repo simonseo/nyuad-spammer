@@ -17,22 +17,28 @@ module.exports = (bot) => {
 
     var userid = convo.get('userID');
     var categoryNames = convo.get('categoryNames');
-    var params = {"userid": userid, "categoryNames": categoryNames};
+    var params = {"userid":userid,"categoryNames":categoryNames};
+    console.log(JSON.stringify(params));
 
-    var xmlHTTP = new XMLHttpRequest();
-    console.log(userid, categoryNames);
-
-    // xmlHTTP.open('POST', url+'addUser/'+userid, true);
-    // xmlHTTP.send(userid);
-
-    xmlHTTP.open('POST', url, true);
-    xmlHTTP.send(JSON.stringify(params));
-
-    xmlHTTP.onreadystatechange = processRequest;
-
+    var getUserURL = url + 'addUser/' + userid;
+    var xmlHTTPUser = new XMLHttpRequest();
+    xmlHTTPUser.open('GET', getUserURL, true);
+    xmlHTTPUser.send();
+    xmlHTTPUser.onreadystatechange = processRequest;
     function processRequest(e) {
-      if (xmlHTTP.readyState == 4 && xmlHTTP.status == 200) {
-          console.log(xmlHTTP.responseText);
+      if (xmlHTTPUser.readyState == 4 && xmlHTTPUser.status == 200) {
+          console.log(xmlHTTPUser.responseText);
+      }
+    }
+
+    var getSubscriptionsURL = url + 'addUserSubscription/';
+    var xmlHTTPSubscription = new XMLHttpRequest();
+    xmlHTTPSubscription.open('POST', getSubscriptionsURL, true);
+    xmlHTTPSubscription.send(JSON.stringify(params));
+    xmlHTTPSubscription.onreadystatechange = processRequest;
+    function processRequest(e) {
+      if (xmlHTTPSubscription.readyState == 4 && xmlHTTPSubscription.status == 200) {
+          console.log(xmlHTTPSubscription.responseText);
           convo.say("Perfect! Your subscriptions have been saved!", { typing:true });
       }
     }
@@ -75,9 +81,6 @@ module.exports = (bot) => {
     });
   });
 
-
-
-
   ///////////////////////////////////////
   ////////   UNSUBSCRIPTIONS   //////////
   ///////////////////////////////////////
@@ -87,19 +90,17 @@ module.exports = (bot) => {
     var userid = convo.get('userID');
     var categoryNames = convo.get('categoryNames');
     var params = {"userid": userid, "categoryNames": categoryNames};
+    console.log(JSON.stringify(params));
 
-    var xmlHTTP = new XMLHttpRequest();
-    console.log(userid, categoryNames);
-
-    xmlHTTP.open('POST', url, true);
-    xmlHTTP.send(JSON.stringify(params));
-
-    xmlHTTP.onreadystatechange = processRequest;
-
+    var getUnsubscriptionsURL = url + 'unsubscribe/';
+    var xmlHTTPUnsubscription = new XMLHttpRequest();
+    xmlHTTPUnsubscription.open('POST', getUnsubscriptionsURL, true);
+    xmlHTTPUnsubscription.send(JSON.stringify(params));
+    xmlHTTPUnsubscription.onreadystatechange = processRequest;
     function processRequest(e) {
-      if (xmlHTTP.readyState == 4 && xmlHTTP.status == 200) {
-          console.log(xmlHTTP.responseText);
-          convo.say("Perfect! We have removed you from those subscriptions!", { typing:true });
+      if (xmlHTTPUnsubscription.readyState == 4 && xmlHTTPUnsubscription.status == 200) {
+          console.log(xmlHTTPUnsubscription.responseText);
+          convo.say("Perfect! Your subscriptions have been saved!", { typing:true });
       }
     }
 
@@ -122,7 +123,7 @@ module.exports = (bot) => {
     convo.say('Type all the names of the categories you wish to be unsubscribed from separated by commas. (ex. Academics, Facilities, Health and Wellness).', { typing: true })
 
     // convo.ask(doNothing, (payload, convo) => {
-    const categoryNames = 'athetlics, studentlife';
+    const categoryNames = 'athetlics, asdfasdf';
       // const categoryNames = payload.message.text;
       const updatedCategoryNames = categoryNames.toLowerCase().replace(/\s/g, '');
       convo.set('categoryNames', updatedCategoryNames);
