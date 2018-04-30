@@ -41,7 +41,7 @@ bot.setGetStartedButton((payload, chat) => {
     }
   }
 
-  var subscription = schedule.scheduleJob('*/3 * * * *', function(){
+  var subscription = schedule.scheduleJob('*/1 * * * *', function(){
 
     var postsURL = url + 'getUserSubs/' + userid;;
     var xmlHTTPPost = new XMLHttpRequest();
