@@ -26,6 +26,7 @@ def getUserSubs(userID):
 			topics_list=[]
 			for topic in subscribed_topics:
 				topics_list.append(topic[0])
+			print("User:\n"+str(userID)+"\n"+str(topics_list))
 			c.execute("SELECT ID,message,updated_at from posts where topic in ({})"
 				.format(','.join('?'*len(topics_list))),(topics_list))
 			posts_selected=c.fetchall()
@@ -40,7 +41,7 @@ def getUserSubs(userID):
 			c.execute("UPDATE users SET last_updated=? WHERE userID=?", (int(time.time()), userID))
 
 
-	#UPDATE LAST UPDATED FOR THIS USER			
+	#UPDATE LAST UPDATED FOR THIS USER
 	conn.commit()
 	conn.close()
 	return jsonify(to_send)

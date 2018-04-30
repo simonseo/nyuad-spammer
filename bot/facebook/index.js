@@ -8,13 +8,6 @@ var url = 'http://127.0.0.1:5000/';
 
 var TurndownService = require('turndown');
 var turndownService = new TurndownService();
-var markdown = turndownService.turndown('<p><strong>Film Screening | Just Another Accent&nbsp;</strong></p> '+
-'<p><em>Tonight April 5 @ 7:00 PM, A6 Building, room 008</em></p> '+
-'<p><em><strong><a href="http://nyuadi.force.com/Events/NYUEventRegistration?event=J8jmAFmk2GDbDDVrwaos0A_3D_3D">RSVP HERE</a></strong></em></p> '+
-'<p>The documentary aims to raise awareness of stuttering and wipe off the stigma that has long been attached to it. The film also follows Farah Al Qaissieh&rsquo;s journey in supporting the stutter community through her non-profit organization of Stutter UAE and the features other people who stutter and the issues they face in everyday life.</p>'+
-'<p>[Director: Khadija Kudsi &amp; Samia Ali | UAE | 2016 | 15 mins | Arabic w/ English Subtitles]</p>'+
-'<p><em><strong>Screening followed by Q&amp;A with the film&rsquo;s lead star Farah Al Qaissieh</strong></em></p>'+
-'<p>&nbsp;</p>')
 
 const aboutModule = require('./modules/about');
 const spammerModule = require('./modules/spammer');
@@ -48,9 +41,9 @@ bot.setGetStartedButton((payload, chat) => {
     }
   }
 
-  var subscription = schedule.scheduleJob('*/5 * * * *', function(){
+  var subscription = schedule.scheduleJob('*/3 * * * *', function(){
 
-    var postsURL = url + 'adf/' + userid;;
+    var postsURL = url + 'getUserSubs/' + userid;;
     var xmlHTTPPost = new XMLHttpRequest();
 
     xmlHTTPPost.open('GET', postsURL, true);
@@ -60,12 +53,12 @@ bot.setGetStartedButton((payload, chat) => {
 
       if (xmlHTTPPost.readyState == 4 && xmlHTTPPost.status == 200) {
 
-        var posts = xmlHTTPPost.responseText;
-        console.log(Object.keys(posts).length)
+        var posts = JSON.parse(xmlHTTPPost.responseText);
+        console.log(posts)
 
-        for (var i=0; i<Object.keys(posts).length+1; i++){
-            var message = JSON.stringify(posts["posts"][i]).replace(/"/g, "");
-            chat.say(message);
+        for (var i=0; i<posts["posts"].length; i++){
+            var markdown = turndownService.turndown(posts["posts"][i])
+            chat.say(markdown);
         }
       }
     }

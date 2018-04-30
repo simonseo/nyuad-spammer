@@ -40,7 +40,7 @@ module.exports = (bot) => {
   const subscriptionCategories = (convo) => {
 
     var categoriesMessage = 'Academics' + '\n' + 'Intercultural Affairs' + '\n' + 'Events and Activities' + '\n' + 'Student Activities' + '\n' +
-    'Dining' + '\n' + 'Community Outreach' + '\n' +'Fitness Center' + '\n' + 'Research' + '\n' + 'Campus Life' + + '\n' + 'Athletics' + '\n' +
+    'Dining' + '\n' + 'Community Outreach' + '\n' +'Fitness Center' + '\n' + 'Research' + '\n' + 'Campus Life' + '\n' + 'Athletics' + '\n' +
     'Registrar' + '\n' + 'Community Life' + '\n' + 'Career Development' + '\n' + 'Academic Affairs' + '\n' + 'Spiritual Life' + '\n' +
     'Library' + '\n' + 'Finance' + '\n' + 'Residential Education' + '\n' + 'Global Education' + '\n' + 'Facilities' + '\n' + 'Health and Wellness' + '\n' +
     'Housing' + '\n' + 'Public Safety' + '\n' + 'Transportation' + '\n' + 'First-Year Office';
@@ -53,7 +53,6 @@ module.exports = (bot) => {
     convo.say('Type all the names of the categories you wish to be subscribed to separated by commas. (ex. Academics, Facilities, Health and Wellness).', { typing: true })
 
     convo.ask(doNothing, (payload, convo) => {
-    // const categoryNames = "athletics, facilities, finance";
       const categoryNames = payload.message.text;
       const updatedCategoryNames = categoryNames.toLowerCase().replace(/\s/g, '');
       convo.set('categoryNames', updatedCategoryNames);
@@ -103,7 +102,7 @@ module.exports = (bot) => {
   const unsubscriptionCategories = (convo) => {
 
     var categoriesMessage = 'Academics' + '\n' + 'Intercultural Affairs' + '\n' + 'Events and Activities' + '\n' + 'Student Activities' + '\n' +
-    'Dining' + '\n' + 'Community Outreach' + '\n' +'Fitness Center' + '\n' + 'Research' + '\n' + 'Campus Life' + + '\n' + 'Athletics' + '\n' +
+    'Dining' + '\n' + 'Community Outreach' + '\n' +'Fitness Center' + '\n' + 'Research' + '\n' + 'Campus Life' + '\n' + 'Athletics' + '\n' +
     'Registrar' + '\n' + 'Community Life' + '\n' + 'Career Development' + '\n' + 'Academic Affairs' + '\n' + 'Spiritual Life' + '\n' +
     'Library' + '\n' + 'Finance' + '\n' + 'Residential Education' + '\n' + 'Global Education' + '\n' + 'Facilities' + '\n' + 'Health and Wellness' + '\n' +
     'Housing' + '\n' + 'Public Safety' + '\n' + 'Transportation' + '\n' + 'First-Year Office';
@@ -116,7 +115,6 @@ module.exports = (bot) => {
     convo.say('Type all the names of the categories you wish to be unsubscribed from separated by commas. (ex. Academics, Facilities, Health and Wellness).', { typing: true })
 
     convo.ask(doNothing, (payload, convo) => {
-    // const categoryNames = "finance";
       const categoryNames = payload.message.text;
       const updatedCategoryNames = categoryNames.toLowerCase().replace(/\s/g, '');
       convo.set('categoryNames', updatedCategoryNames);

@@ -16,4 +16,4 @@ class Post:
 		# print(data[24])
 		# print(json.loads(data[24]))
 		# print(json.loads(data[24])['name'])
-		self.category_name=json.loads(data[24].replace("'", '"'))['name'] #change to double quote
+		self.category_name="category"#json.loads(data[24].replace("'", '"'))['name'] #change to double quote
