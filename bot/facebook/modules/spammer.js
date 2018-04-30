@@ -63,15 +63,15 @@ module.exports = (bot) => {
 
     convo.say('Type all the names of the categories you wish to be subscribed to separated by commas. (ex. Academics, Facilities, Health and Wellness).', { typing: true })
 
-    // convo.ask(doNothing, (payload, convo) => {
-    const categoryNames = "athletics, facilities, finance";
-      // const categoryNames = payload.message.text;
+    convo.ask(doNothing, (payload, convo) => {
+    // const categoryNames = "athletics, facilities, finance";
+      const categoryNames = payload.message.text;
       const updatedCategoryNames = categoryNames.toLowerCase().replace(/\s/g, '');
       convo.set('categoryNames', updatedCategoryNames);
 
       addSubscriptionsToFlask(convo);
       convo.end();
-    // });
+    });
   };
 
   bot.on('postback:MENU_SUBSCRIPTION', (payload, chat) => {
