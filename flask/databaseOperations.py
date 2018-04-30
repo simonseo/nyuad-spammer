@@ -2,7 +2,7 @@ import sqlite3
 from post import Post
 from datetime import datetime as dt
 import time
-
+from sendPost import SendPost
 def addpost(data):
 	postToAdd=Post(data)
 	conn = sqlite3.connect('posts.db')
@@ -20,9 +20,12 @@ def addpost(data):
 				print("Time replaced for post ID "+ postToAdd.ID)
 				with conn:
 					c.execute("UPDATE posts SET message=?, updated_at=? WHERE ID=?", (postToAdd.message, postToAdd.updated_at, postToAdd.ID))
+				SendPost(postToAdd.ID)
+
 	else:
 		with conn:
 			c.execute("INSERT INTO posts VALUES (:category_id, :category_name, :created_at, :email, :fullname, :ID, :message, :publish_date, :title, :topic, :updated, :updated_at)", {"category_id":postToAdd.category_id, "category_name":postToAdd.category_name, "created_at":postToAdd.created_at, "email":postToAdd.email, "fullname":postToAdd.fullname, "ID":postToAdd.ID, "message":postToAdd.message, "publish_date":postToAdd.publish_date, "title":postToAdd.title, "topic":postToAdd.topic, "updated":postToAdd.updated, "updated_at":postToAdd.updated_at})
+		SendPost(postToAdd.ID)
 
 	conn.commit()
 	conn.close()
@@ -113,5 +116,3 @@ def unSub(userID, categoryNames):
 				print("Unsubscibed "+str(userID)+" from "+category)
 	return "user unsubscribed"
 
-def sendPost(postID):
-	return "Sent to chatbot"
