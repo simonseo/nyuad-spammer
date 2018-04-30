@@ -4,7 +4,7 @@ const BootBot = require('bootbot');
 const config = require('config');
 const schedule = require('node-schedule');
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
-var url = 'http://127.0.0.1:5000/';
+var url = 'http://0.0.0.0:5000/';
 
 var TurndownService = require('turndown');
 var turndownService = new TurndownService();
