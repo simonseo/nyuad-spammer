@@ -49,6 +49,11 @@ bot.setGetStartedButton((payload, chat) => {
           chat.say(xmlHTTPPost.responseText);
       }
     }
+
+    //everytime i recieve requests
+    //look at json and post requests
+    //two fileuploads html
+    //comma separated user ids
   });
 
 });
