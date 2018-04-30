@@ -35,25 +35,40 @@ bot.setGetStartedButton((payload, chat) => {
     });
   });
 
-  // Every five minutes check if there have been updates
+  const userid = payload.sender.id;
+
+  var getUserURL = url + 'addUser/' + userid;
+  var xmlHTTPUser = new XMLHttpRequest();
+  xmlHTTPUser.open('GET', getUserURL, true);
+  xmlHTTPUser.send();
+  xmlHTTPUser.onreadystatechange = processRequest;
+  function processRequest(e) {
+    if (xmlHTTPUser.readyState == 4 && xmlHTTPUser.status == 200) {
+        console.log(xmlHTTPUser.responseText);
+    }
+  }
+
   var subscription = schedule.scheduleJob('*/5 * * * *', function(){
 
-    var postsURL = url + '/printall';
+    var postsURL = url + 'adf/' + userid;;
     var xmlHTTPPost = new XMLHttpRequest();
+
     xmlHTTPPost.open('GET', postsURL, true);
     xmlHTTPPost.send();
     xmlHTTPPost.onreadystatechange = processRequest;
     function processRequest(e) {
+
       if (xmlHTTPPost.readyState == 4 && xmlHTTPPost.status == 200) {
-          console.log(xmlHTTPPost.responseText);
-          chat.say(xmlHTTPPost.responseText);
+
+        var posts = xmlHTTPPost.responseText;
+        console.log(Object.keys(posts).length)
+
+        for (var i=0; i<Object.keys(posts).length+1; i++){
+            var message = JSON.stringify(posts["posts"][i]).replace(/"/g, "");
+            chat.say(message);
+        }
       }
     }
-
-    //everytime i recieve requests
-    //look at json and post requests
-    //two fileuploads html
-    //comma separated user ids
   });
 
 });
