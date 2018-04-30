@@ -43,6 +43,9 @@ def removepost(rmID):
 @app.route("/", methods=['GET','POST'])
 def getCSV():
 	# http://flask.pocoo.org/docs/patterns/fileuploads/
+
+	print(request.data)
+
 	if request.method == 'POST':
 		if 'file' not in request.files:
 			return "No file part"

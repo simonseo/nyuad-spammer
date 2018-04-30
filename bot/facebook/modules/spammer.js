@@ -1,17 +1,7 @@
 'use strict';
 
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
-var url = 'http://127.0.0.1:5000';
-
-// var TurndownService = require('turndown');
-// var turndownService = new TurndownService();
-// var markdown = turndownService.turndown('<p><strong>Film Screening | Just Another Accent&nbsp;</strong></p> '+
-// '<p><em>Tonight April 5 @ 7:00 PM, A6 Building, room 008</em></p> '+
-// '<p><em><strong><a href="http://nyuadi.force.com/Events/NYUEventRegistration?event=J8jmAFmk2GDbDDVrwaos0A_3D_3D">RSVP HERE</a></strong></em></p> '+
-// '<p>The documentary aims to raise awareness of stuttering and wipe off the stigma that has long been attached to it. The film also follows Farah Al Qaissieh&rsquo;s journey in supporting the stutter community through her non-profit organization of Stutter UAE and the features other people who stutter and the issues they face in everyday life.</p>'+
-// '<p>[Director: Khadija Kudsi &amp; Samia Ali | UAE | 2016 | 15 mins | Arabic w/ English Subtitles]</p>'+
-// '<p><em><strong>Screening followed by Q&amp;A with the film&rsquo;s lead star Farah Al Qaissieh</strong></em></p>'+
-// '<p>&nbsp;</p>')
+var url = 'http://127.0.0.1:5000/';
 
 module.exports = (bot) => {
 
@@ -27,120 +17,130 @@ module.exports = (bot) => {
 
     var userid = convo.get('userID');
     var categoryNames = convo.get('categoryNames');
-    var params = {"userid": userid, "categoryNames": categoryNames};
+    var params = {"userid":userid,"categoryNames":categoryNames};
+    console.log(JSON.stringify(params));
 
-    var xmlHTTP = new XMLHttpRequest();
-    console.log(userid, categoryNames);
-
-    xmlHTTP.open('POST', url, true);
-    xmlHTTP.send(JSON.stringify(params));
-
-    xmlHTTP.onreadystatechange = processRequest;
-
+    var getUserURL = url + 'addUser/' + userid;
+    var xmlHTTPUser = new XMLHttpRequest();
+    xmlHTTPUser.open('GET', getUserURL, true);
+    xmlHTTPUser.send();
+    xmlHTTPUser.onreadystatechange = processRequest;
     function processRequest(e) {
-      if (xmlHTTP.readyState == 4 && xmlHTTP.status == 200) {
-          console.log(xmlHTTP.responseText);
+      if (xmlHTTPUser.readyState == 4 && xmlHTTPUser.status == 200) {
+          console.log(xmlHTTPUser.responseText);
+      }
+    }
+
+    var getSubscriptionsURL = url + 'addUserSubscription';
+    var xmlHTTPSubscription = new XMLHttpRequest();
+
+    xmlHTTPSubscription.open('POST', getSubscriptionsURL, true);
+    xmlHTTPSubscription.send(JSON.stringify(params));
+
+    xmlHTTPSubscription.onreadystatechange = processRequest;
+    function processRequest(e) {
+      if (xmlHTTPSubscription.readyState == 4 && xmlHTTPSubscription.status == 200) {
+          console.log(xmlHTTPSubscription.responseText);
           convo.say("Perfect! Your subscriptions have been saved!", { typing:true });
       }
     }
-    
+
     return;
   }
 
   const subscriptionCategories = (convo) => {
 
-    // var categoriesXML = new XMLHttpRequest();
-    // categoriesXML.open('GET', theUrl, true);
-    // categoriesXML.send();
-    // categoriesXML.onreadystatechange = processCategoriesRequest;
-    //
-    // function processCategoriesRequest(e) {
-    //     if (categoriesXML.readyState == 4 && categoriesXML.status == 200) {
-    //         var response = JSON.parse(categoriesXML.responseText);
-    //         convo.say(response.category_name, { typing:true });
-    //         convo.log(response.category_name);
-    //     }
-    // }
+    var categoriesMessage = 'Academics' + '\n' + 'Intercultural Affairs' + '\n' + 'Events and Activities' + '\n' + 'Student Activities' + '\n' +
+    'Dining' + '\n' + 'Community Outreach' + '\n' +'Fitness Center' + '\n' + 'Research' + '\n' + 'Campus Life' + + '\n' + 'Athletics' + '\n' +
+    'Registrar' + '\n' + 'Community Life' + '\n' + 'Career Development' + '\n' + 'Academic Affairs' + '\n' + 'Spiritual Life' + '\n' +
+    'Library' + '\n' + 'Finance' + '\n' + 'Residential Education' + '\n' + 'Global Education' + '\n' + 'Facilities' + '\n' + 'Health and Wellness' + '\n' +
+    'Housing' + '\n' + 'Public Safety' + '\n' + 'Transportation' + '\n' + 'First-Year Office';
 
-    convo.say("Student portal, Athetlics, Resed, Education", { typing:true });
-    convo.say('Type all the names of the categories you wish to be subscribed to separated by commas. (ex. student life, athletics). This information will be updated everytime you chose to subscribe.', { typing: true });
+    convo.say('Our current categories are: ', { typing:true })
+    .then(() => {
+      convo.say(categoriesMessage);
+    });
 
-    convo.ask(doNothing, (payload, convo) => {
-      const categoryNames = payload.message.text;
+    convo.say('Type all the names of the categories you wish to be subscribed to separated by commas. (ex. Academics, Facilities, Health and Wellness).', { typing: true })
+
+    // convo.ask(doNothing, (payload, convo) => {
+    const categoryNames = "athletics, facilities, finance";
+      // const categoryNames = payload.message.text;
       const updatedCategoryNames = categoryNames.toLowerCase().replace(/\s/g, '');
       convo.set('categoryNames', updatedCategoryNames);
 
       addSubscriptionsToFlask(convo);
       convo.end();
-    });
+    // });
   };
 
   bot.on('postback:MENU_SUBSCRIPTION', (payload, chat) => {
     const userID = payload.sender.id;
     chat.conversation((convo) => {
       convo.set('userID', userID);
-      chat.say('Our current categories are: ', { typing:true }).then(() => subscriptionCategories(convo));
+      subscriptionCategories(convo);
       return;
     });
   });
 
   ///////////////////////////////////////
-  /////////////  UPDATES  ///////////////
+  ////////   UNSUBSCRIPTIONS   //////////
   ///////////////////////////////////////
 
-  const showUpdatesFromFlask = (convo) => {
+  const removeSubscriptionsFromFlask = (convo) => {
 
-    //get request for updates on a category
+    var userid = convo.get('userID');
+    var categoryNames = convo.get('categoryNames');
+    var params = {"userid": userid, "categoryNames": categoryNames};
+    console.log(JSON.stringify(params));
+
+    var getUnsubscriptionsURL = url + 'unsubscribe';
+    var xmlHTTPUnsubscription = new XMLHttpRequest();
+    xmlHTTPUnsubscription.open('POST', getUnsubscriptionsURL, true);
+    xmlHTTPUnsubscription.send(JSON.stringify(params));
+    xmlHTTPUnsubscription.onreadystatechange = processRequest;
+    function processRequest(e) {
+      if (xmlHTTPUnsubscription.readyState == 4 && xmlHTTPUnsubscription.status == 200) {
+          console.log(xmlHTTPUnsubscription.responseText);
+          convo.say("Perfect! You have been unsubscribed!", { typing:true });
+      }
+    }
+
+    return;
   }
 
-  const updateCategories = (convo) => {
+  const unsubscriptionCategories = (convo) => {
 
-    // var categoriesXML = new XMLHttpRequest();
-    // categoriesXML.open('GET', theUrl, true);
-    // categoriesXML.send();
-    // categoriesXML.onreadystatechange = processCategoriesRequest;
-    //
-    // function processCategoriesRequest(e) {
-    //     if (categoriesXML.readyState == 4 && categoriesXML.status == 200) {
-    //         var response = JSON.parse(categoriesXML.responseText);
-    //         convo.say(response.category_name, { typing:true });
-    //         convo.log(response.category_name);
-    //     }
-    // }
+    var categoriesMessage = 'Academics' + '\n' + 'Intercultural Affairs' + '\n' + 'Events and Activities' + '\n' + 'Student Activities' + '\n' +
+    'Dining' + '\n' + 'Community Outreach' + '\n' +'Fitness Center' + '\n' + 'Research' + '\n' + 'Campus Life' + + '\n' + 'Athletics' + '\n' +
+    'Registrar' + '\n' + 'Community Life' + '\n' + 'Career Development' + '\n' + 'Academic Affairs' + '\n' + 'Spiritual Life' + '\n' +
+    'Library' + '\n' + 'Finance' + '\n' + 'Residential Education' + '\n' + 'Global Education' + '\n' + 'Facilities' + '\n' + 'Health and Wellness' + '\n' +
+    'Housing' + '\n' + 'Public Safety' + '\n' + 'Transportation' + '\n' + 'First-Year Office';
 
-    convo.say("Student portal, Athetlics, Resed, Education", { typing:true });
-    convo.say('Type the name of the category you wish to see an update from', { typing: true });
+    convo.say('Our current categories are: ', { typing:true })
+    .then(() => {
+      convo.say(categoriesMessage);
+    });
+
+    convo.say('Type all the names of the categories you wish to be unsubscribed from separated by commas. (ex. Academics, Facilities, Health and Wellness).', { typing: true })
 
     convo.ask(doNothing, (payload, convo) => {
+    // const categoryNames = "finance";
       const categoryNames = payload.message.text;
       const updatedCategoryNames = categoryNames.toLowerCase().replace(/\s/g, '');
       convo.set('categoryNames', updatedCategoryNames);
 
-      showUpdatesFromFlask(convo);
+      removeSubscriptionsFromFlask(convo);
       convo.end();
     });
   };
 
-  bot.on('postback:MENU_UPDATES', (payload, chat) => {
+  bot.on('postback:MENU_UNSUBSCRIPTION', (payload, chat) => {
     const userID = payload.sender.id;
     chat.conversation((convo) => {
       convo.set('userID', userID);
-      chat.say('Our current categories are: ', { typing:true }).then(() => updateCategories(convo));
+      unsubscriptionCategories(convo);
       return;
-    });
-  });
-
-  ///////////////////////////////////////
-  /////////////   ABOUT   ///////////////
-  ///////////////////////////////////////
-
-  bot.on('postback:MENU_ABOUT', (payload, chat) => {
-    chat.getUserProfile()
-    .then((user) => {
-      chat.say(`Hey, ${user.first_name}! I know that acessing Student Portal can sometimes be a little bit annoying. With me, that will quickly go away!`, { typing:true })
-      .then(() => {
-        chat.say('Simply click the button from the menu to subscribe or unsubscribe from notifications from categories in Student Portal.', { typing:true });
-      });
     });
   });
 
