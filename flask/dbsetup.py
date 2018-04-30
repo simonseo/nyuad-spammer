@@ -21,23 +21,53 @@ def DBsetup():
 	)""")
 
 	c.execute("""CREATE TABLE IF NOT EXISTS users (
-		userID text not null
+		userID text not null unique,
+		last_updated integer not null
 	)""")
 
 	c.execute("""CREATE TABLE IF NOT EXISTS userSubscriptions (
-		category_id text not null,
+		topic_id text not null,
 		userID text not null
 	)""")
 
-	c.execute("""CREATE TABLE IF NOT EXISTS categories (
-		category_id text not null,
-		category_name text not null
+	c.execute("""CREATE TABLE IF NOT EXISTS topics (
+		topic_id text not null,
+		topic text not null
 	)""")
 
-	categories= dict([("Events & Activities", 1),("News & Information", 5),("Learning & Development", 2),("Service Notifications", 4),("Job Opportunities, Internships & Volunteering", 7),("Deadlines", 3),("Discounts, Deals & Promotions", 6),("Policies", 9)])
-
-	for k, v in categories.items():
-		c.execute("INSERT INTO categories VALUES (:category_id, :category_name)", {"category_id":v, "category_name":k})
+	topics= dict([("academics", 1),
+("interculturalaffairs", 2),
+("eventsandactivities", 3),
+("studentactivities", 4),
+("dining", 5),
+("communityoutreach", 6),
+("fitnesscenter", 7),
+("research", 8),
+("campuslife", 9),
+("athletics", 10),
+("registrar", 11),
+("communitylife", 12),
+("careerdevelopment", 13),
+("academicaffairs", 14),
+("spirituallife", 15),
+("library", 16),
+("finance", 17),
+("residentialeducation", 18),
+("globaleducation", 19),
+("facilities", 20),
+("healthandwellness", 21),
+("housing", 22),
+("publicsafety", 23),
+("transportation", 24),
+("first-yearoffice", 25)])
+	
+	c.execute("SELECT COUNT(*) from topics")
+	count=c.fetchone()
+	# print(count[0])
+	
+	if not count[0]:
+		for k, v in topics.items():
+				c.execute("INSERT INTO topics VALUES (:topic_id, :topic)", {"topic_id":v, "topic":k})
 
 	conn.commit()
 	conn.close()
