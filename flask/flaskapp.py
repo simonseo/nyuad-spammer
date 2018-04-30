@@ -30,7 +30,7 @@ def addSub():
 @app.route("/unsubscribe", methods=['POST'])
 def unSub():
 	data = json.loads(request.data.decode("utf-8"))
-	return db.unSub("2351547248196100","finance,facilities")
+	return db.unSub(data["userid"], data["categoryNames"])
 
 @app.route("/getpost/<int:getID>")
 def getpost(getID):
