@@ -24,13 +24,13 @@ def addUser(IDToAdd):
 
 @app.route("/addUserSubscription", methods=['POST'])
 def addSub():
-	data = json.loads(request.json)
-	return db.addSub(data["userid"],data["categoryNames"])
+	data = json.loads(request.data.decode("utf-8"))
+	return db.addSub(data["userid"], data["categoryNames"])
 
 @app.route("/unsubscribe", methods=['POST'])
 def unSub():
-	data = json.loads(request.json)
-	return db.unSub(data["userid"],data["categoryNames"])
+	data = json.loads(request.data.decode("utf-8"))
+	return db.unSub("2351547248196100","finance,facilities")
 
 @app.route("/getpost/<int:getID>")
 def getpost(getID):

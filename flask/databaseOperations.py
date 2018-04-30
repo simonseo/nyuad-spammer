@@ -71,7 +71,7 @@ def addUser(IDToAdd):
 	conn = sqlite3.connect('posts.db')
 	c = conn.cursor()
 	with conn:
-			c.execute("INSERT INTO users VALUES (?,?)",(IDToAdd, int(time.time())))
+			c.execute("INSERT OR IGNORE INTO users VALUES (?,?)",(IDToAdd, int(time.time())))
 	conn.commit()
 	conn.close()
 	return "user added"
@@ -84,7 +84,7 @@ def addSub(userID, categoryNames):
 		with conn:
 			c.execute("SELECT topic_id FROM topics WHERE topic = ?",(category,))
 			topic_id_found=c.fetchone()
-			print(topic_id_found[0])
+			# print(topic_id_found[0])
 			if topic_id_found:
 				# print("Found the topic "+category)
 				c.execute("SELECT * FROM userSubscriptions WHERE userID = ? AND topic_id = ? ",(userID,topic_id_found[0]))
