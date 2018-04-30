@@ -1,7 +1,7 @@
 'use strict';
 
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
-var url = 'http://127.0.0.1:5000';
+var url = 'http://127.0.0.1:5000/';
 
 // var TurndownService = require('turndown');
 // var turndownService = new TurndownService();
@@ -43,27 +43,24 @@ module.exports = (bot) => {
           convo.say("Perfect! Your subscriptions have been saved!", { typing:true });
       }
     }
-    
+
     return;
   }
 
   const subscriptionCategories = (convo) => {
 
-    // var categoriesXML = new XMLHttpRequest();
-    // categoriesXML.open('GET', theUrl, true);
-    // categoriesXML.send();
-    // categoriesXML.onreadystatechange = processCategoriesRequest;
-    //
-    // function processCategoriesRequest(e) {
-    //     if (categoriesXML.readyState == 4 && categoriesXML.status == 200) {
-    //         var response = JSON.parse(categoriesXML.responseText);
-    //         convo.say(response.category_name, { typing:true });
-    //         convo.log(response.category_name);
-    //     }
-    // }
+    var categoriesMessage = 'Academics' + '\n' + 'Intercultural Affairs' + '\n' + 'Events and Activities' + '\n' + 'Student Activities' + '\n' +
+    'Dining' + '\n' + 'Community Outreach' + '\n' +'Fitness Center' + '\n' + 'Research' + '\n' + 'Campus Life' + + '\n' + 'Athletics' + '\n' +
+    'Registrar' + '\n' + 'Community Life' + '\n' + 'Career Development' + '\n' + 'Academic Affairs' + '\n' + 'Spiritual Life' + '\n' +
+    'Library' + '\n' + 'Finance' + '\n' + 'Residential Education' + '\n' + 'Global Education' + '\n' + 'Facilities' + '\n' + 'Health and Wellness' + '\n' +
+    'Housing' + '\n' + 'Public Safety' + '\n' + 'Transportation' + '\n' + 'First-Year Office';
 
-    convo.say("Student portal, Athetlics, Resed, Education", { typing:true });
-    convo.say('Type all the names of the categories you wish to be subscribed to separated by commas. (ex. student life, athletics). This information will be updated everytime you chose to subscribe.', { typing: true });
+    convo.say('Our current categories are: ', { typing:true })
+    .then(() => {
+      convo.say(categoriesMessage);
+    });
+
+    convo.say('Type all the names of the categories you wish to be subscribed to separated by commas. (ex. Academics, Facilities, Health and Wellness).', { typing: true })
 
     convo.ask(doNothing, (payload, convo) => {
       const categoryNames = payload.message.text;
@@ -79,56 +76,11 @@ module.exports = (bot) => {
     const userID = payload.sender.id;
     chat.conversation((convo) => {
       convo.set('userID', userID);
-      chat.say('Our current categories are: ', { typing:true }).then(() => subscriptionCategories(convo));
+      subscriptionCategories(convo);
       return;
     });
   });
 
-  ///////////////////////////////////////
-  /////////////  UPDATES  ///////////////
-  ///////////////////////////////////////
-
-  const showUpdatesFromFlask = (convo) => {
-
-    //get request for updates on a category
-  }
-
-  const updateCategories = (convo) => {
-
-    // var categoriesXML = new XMLHttpRequest();
-    // categoriesXML.open('GET', theUrl, true);
-    // categoriesXML.send();
-    // categoriesXML.onreadystatechange = processCategoriesRequest;
-    //
-    // function processCategoriesRequest(e) {
-    //     if (categoriesXML.readyState == 4 && categoriesXML.status == 200) {
-    //         var response = JSON.parse(categoriesXML.responseText);
-    //         convo.say(response.category_name, { typing:true });
-    //         convo.log(response.category_name);
-    //     }
-    // }
-
-    convo.say("Student portal, Athetlics, Resed, Education", { typing:true });
-    convo.say('Type the name of the category you wish to see an update from', { typing: true });
-
-    convo.ask(doNothing, (payload, convo) => {
-      const categoryNames = payload.message.text;
-      const updatedCategoryNames = categoryNames.toLowerCase().replace(/\s/g, '');
-      convo.set('categoryNames', updatedCategoryNames);
-
-      showUpdatesFromFlask(convo);
-      convo.end();
-    });
-  };
-
-  bot.on('postback:MENU_UPDATES', (payload, chat) => {
-    const userID = payload.sender.id;
-    chat.conversation((convo) => {
-      convo.set('userID', userID);
-      chat.say('Our current categories are: ', { typing:true }).then(() => updateCategories(convo));
-      return;
-    });
-  });
 
   ///////////////////////////////////////
   /////////////   ABOUT   ///////////////

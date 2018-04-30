@@ -29,14 +29,14 @@ bot.setPersistentMenu([
     payload: 'MENU_ABOUT'
   },
   {
-    title: 'Updates',
-    type: 'postback',
-    payload: 'MENU_UPDATES'
-  },
-  {
-    title: 'Subscriptions',
+    title: 'Subscribe',
     type: 'postback',
     payload: 'MENU_SUBSCRIPTION'
+  },
+  {
+    title: 'Unsubscribe',
+    type: 'postback',
+    payload: 'MENU_UNSUBSCRIPTION'
   }
 ]);
 
