@@ -1,17 +1,7 @@
 'use strict';
 
-var sqlite3 = require('sqlite3').verbose();
-var db;
-
-// var TurndownService = require('turndown');
-// var turndownService = new TurndownService();
-// var markdown = turndownService.turndown('<p><strong>Film Screening | Just Another Accent&nbsp;</strong></p> '+
-// '<p><em>Tonight April 5 @ 7:00 PM, A6 Building, room 008</em></p> '+
-// '<p><em><strong><a href="http://nyuadi.force.com/Events/NYUEventRegistration?event=J8jmAFmk2GDbDDVrwaos0A_3D_3D">RSVP HERE</a></strong></em></p> '+
-// '<p>The documentary aims to raise awareness of stuttering and wipe off the stigma that has long been attached to it. The film also follows Farah Al Qaissieh&rsquo;s journey in supporting the stutter community through her non-profit organization of Stutter UAE and the features other people who stutter and the issues they face in everyday life.</p>'+
-// '<p>[Director: Khadija Kudsi &amp; Samia Ali | UAE | 2016 | 15 mins | Arabic w/ English Subtitles]</p>'+
-// '<p><em><strong>Screening followed by Q&amp;A with the film&rsquo;s lead star Farah Al Qaissieh</strong></em></p>'+
-// '<p>&nbsp;</p>')
+var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+var url = 'http://127.0.0.1:5000/';
 
 module.exports = (bot) => {
 
@@ -19,113 +9,134 @@ module.exports = (bot) => {
     return;
   }
 
-  //still need to check for duplicate values
-  const updateTable = (convo) => {
-    console.log("Open Database");
-    let db = new sqlite3.Database('./database/spammerDatabase.db')
+  ///////////////////////////////////////
+  //////////  SUBSCRIPTIONS /////////////
+  ///////////////////////////////////////
 
-    //if first time insert into user table
-    console.log("Inserting into User Table");
-    var user = db.prepare("INSERT INTO users VALUES (?, ?)");
-    user.run(convo.get('userID'), '0');
-    user.finalize(readUserValues);
+  const addSubscriptionsToFlask = (convo) => {
 
-    function readUserValues() {
-      console.log("Reading values");
-      db.all("SELECT userid, timestamp FROM users", function(err, rows) {
-          rows.forEach(function (row) {
-              console.log(row.userid + ": " + row.timestamp);
-          });
-      });
+    var userid = convo.get('userID');
+    var categoryNames = convo.get('categoryNames');
+    var params = {"userid": userid, "categoryNames": categoryNames};
+
+    var xmlHTTP = new XMLHttpRequest();
+    console.log(userid, categoryNames);
+
+    // xmlHTTP.open('POST', url+'addUser/'+userid, true);
+    // xmlHTTP.send(userid);
+
+    xmlHTTP.open('POST', url, true);
+    xmlHTTP.send(JSON.stringify(params));
+
+    xmlHTTP.onreadystatechange = processRequest;
+
+    function processRequest(e) {
+      if (xmlHTTP.readyState == 4 && xmlHTTP.status == 200) {
+          console.log(xmlHTTP.responseText);
+          convo.say("Perfect! Your subscriptions have been saved!", { typing:true });
+      }
     }
 
-    //else just update the subscription table
-    console.log("Inserting into User Subscription Table");
-    var subscription = db.prepare("INSERT INTO userSubscription VALUES (?, ?)");
-    subscription.run(convo.get('userID'), convo.get('userCategory'));
-    subscription.finalize(readSubscriptionValues);
-
-    function readSubscriptionValues() {
-      console.log("Reading values");
-      db.all("SELECT userid, categoryString FROM userSubscription", function(err, rows) {
-          rows.forEach(function (row) {
-              console.log(row.userid + ": " + row.categoryString);
-          });
-      });
-    }
-
-    console.log("Close database");
-    db.close();
+    return;
   }
 
-  const subscribeToCategory = (convo) => {
+  const subscriptionCategories = (convo) => {
 
-    convo.ask(doNothing, (payload, convo) => {
-      const userCategory = payload.message.text;
+    var categoriesMessage = 'Academics' + '\n' + 'Intercultural Affairs' + '\n' + 'Events and Activities' + '\n' + 'Student Activities' + '\n' +
+    'Dining' + '\n' + 'Community Outreach' + '\n' +'Fitness Center' + '\n' + 'Research' + '\n' + 'Campus Life' + + '\n' + 'Athletics' + '\n' +
+    'Registrar' + '\n' + 'Community Life' + '\n' + 'Career Development' + '\n' + 'Academic Affairs' + '\n' + 'Spiritual Life' + '\n' +
+    'Library' + '\n' + 'Finance' + '\n' + 'Residential Education' + '\n' + 'Global Education' + '\n' + 'Facilities' + '\n' + 'Health and Wellness' + '\n' +
+    'Housing' + '\n' + 'Public Safety' + '\n' + 'Transportation' + '\n' + 'First-Year Office';
 
-      //check if category is in table
-      if (userCategory == "studentlife"){
-        convo.set('userCategory', userCategory);
-        console.log(userCategory);
-
-        updateTable(convo);
-        return;
-      }
-
-      else {
-        convo.say("This category is not found in Student Portal. Click the subscribe button to try again!", { typing: true });
-        convo.end();
-      }
-
+    convo.say('Our current categories are: ', { typing:true })
+    .then(() => {
+      convo.say(categoriesMessage);
     });
+
+    convo.say('Type all the names of the categories you wish to be subscribed to separated by commas. (ex. Academics, Facilities, Health and Wellness).', { typing: true })
+
+    // convo.ask(doNothing, (payload, convo) => {
+    const categoryNames = 'athetlics, studentlife';
+      // const categoryNames = payload.message.text;
+      const updatedCategoryNames = categoryNames.toLowerCase().replace(/\s/g, '');
+      convo.set('categoryNames', updatedCategoryNames);
+
+      addSubscriptionsToFlask(convo);
+      convo.end();
+    // });
   };
 
-  const unsubscribeToCategory = (convo) => {
-
-    convo.ask(doNothing, (payload, convo) => {
-      const userCategory = payload.message.text;
-
-      if (userCategory == "studentlife"){
-        convo.set('userCategory', userCategory);
-        console.log(userCategory);
-        return;
-      }
-
-      else {
-        convo.say("This category is not found in Student Portal. Click the unsubscribe button to try again!", { typing: true });
-        convo.end();
-      }
-
-    });
-  };
-
-  bot.on('postback:MENU_SUBSCRIBE', (payload, chat) => {
+  bot.on('postback:MENU_SUBSCRIPTION', (payload, chat) => {
     const userID = payload.sender.id;
-
     chat.conversation((convo) => {
       convo.set('userID', userID);
-
-      chat.say('Type the name of the category you wish to be subscribed to', { typing: true });
-      subscribeToCategory(convo);
-
+      subscriptionCategories(convo);
       return;
     });
   });
 
 
-  bot.on('postback:MENU_UNSUBSCRIBE', (payload, chat) => {
+
+
+  ///////////////////////////////////////
+  ////////   UNSUBSCRIPTIONS   //////////
+  ///////////////////////////////////////
+
+  const removeSubscriptionsFromFlask = (convo) => {
+
+    var userid = convo.get('userID');
+    var categoryNames = convo.get('categoryNames');
+    var params = {"userid": userid, "categoryNames": categoryNames};
+
+    var xmlHTTP = new XMLHttpRequest();
+    console.log(userid, categoryNames);
+
+    xmlHTTP.open('POST', url, true);
+    xmlHTTP.send(JSON.stringify(params));
+
+    xmlHTTP.onreadystatechange = processRequest;
+
+    function processRequest(e) {
+      if (xmlHTTP.readyState == 4 && xmlHTTP.status == 200) {
+          console.log(xmlHTTP.responseText);
+          convo.say("Perfect! We have removed you from those subscriptions!", { typing:true });
+      }
+    }
+
+    return;
+  }
+
+  const unsubscriptionCategories = (convo) => {
+
+    var categoriesMessage = 'Academics' + '\n' + 'Intercultural Affairs' + '\n' + 'Events and Activities' + '\n' + 'Student Activities' + '\n' +
+    'Dining' + '\n' + 'Community Outreach' + '\n' +'Fitness Center' + '\n' + 'Research' + '\n' + 'Campus Life' + + '\n' + 'Athletics' + '\n' +
+    'Registrar' + '\n' + 'Community Life' + '\n' + 'Career Development' + '\n' + 'Academic Affairs' + '\n' + 'Spiritual Life' + '\n' +
+    'Library' + '\n' + 'Finance' + '\n' + 'Residential Education' + '\n' + 'Global Education' + '\n' + 'Facilities' + '\n' + 'Health and Wellness' + '\n' +
+    'Housing' + '\n' + 'Public Safety' + '\n' + 'Transportation' + '\n' + 'First-Year Office';
+
+    convo.say('Our current categories are: ', { typing:true })
+    .then(() => {
+      convo.say(categoriesMessage);
+    });
+
+    convo.say('Type all the names of the categories you wish to be unsubscribed from separated by commas. (ex. Academics, Facilities, Health and Wellness).', { typing: true })
+
+    // convo.ask(doNothing, (payload, convo) => {
+    const categoryNames = 'athetlics, studentlife';
+      // const categoryNames = payload.message.text;
+      const updatedCategoryNames = categoryNames.toLowerCase().replace(/\s/g, '');
+      convo.set('categoryNames', updatedCategoryNames);
+
+      removeSubscriptionsFromFlask(convo);
+      convo.end();
+    // });
+  };
+
+  bot.on('postback:MENU_UNSUBSCRIPTION', (payload, chat) => {
     const userID = payload.sender.id;
-
-    // chat.say(markdown);
-    // console.log(markdown);
-
-
     chat.conversation((convo) => {
       convo.set('userID', userID);
-
-      chat.say('Type the name of the category you wish to be unsubscribed from', { typing: true });
-      unsubscribeToCategory(convo);
-
+      unsubscriptionCategories(convo);
       return;
     });
   });

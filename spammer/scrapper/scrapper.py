@@ -13,6 +13,8 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from contextlib import contextmanager
 
+import requests, json
+
 @contextmanager
 def headlessDriver():
 	options = webdriver.ChromeOptions()
@@ -60,12 +62,18 @@ def getAnnouncementJson(driver):
 	return jsonStr
 
 def send(jsonStr):
-	print(jsonStr[:100])
+	print("sending data: ", jsonStr[:100], "\n======")
 	# write code to send jsonStr to DB server here...
+	url = "http://127.0.0.1:5000/postJson"
+	jsonStr = json.dumps(json.loads(jsonStr))
+	r = requests.post(url=url, json=jsonStr)
+	print("response from database server:", r.text)
+
 
 def run(forEvery=5*60):
 	with headlessDriver() as driver:
 		jsonStr = getAnnouncementJson(driver)
+	# jsonStr = json.dumps({"test":"testdata"})
 	send(jsonStr)
 	time.sleep(forEvery) # 5 minutes
 
