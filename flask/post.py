@@ -1,14 +1,19 @@
+import json
+
 class Post:
 	def __init__(self,data):
-		self.category_id=data[10]
-		self.category_name=data[11]
-		self.created_at=data[12]
-		self.email=data[14]
-		self.fullname=data[16]
-		self.ID=data[17]
-		self.message=data[20]
-		self.publish_date=data[22]
-		self.title=data[24]
-		self.topic=data[25]
-		self.updated=data[26]
-		self.updated_at=data[27]
+		self.ID=data[0]
+		self.title=data[1]
+		self.message=data[2]
+		self.topic=data[3]
+		self.category_id=data[5]
+		self.publish_date=data[7]
+		self.fullname=data[10]
+		self.email=data[11]
+		self.updated=data[15]
+		self.updated_at=data[17]
+		self.created_at=data[18]
+		# print(data[24])
+		# print(json.loads(data[24]))
+		# print(json.loads(data[24])['name'])
+		self.category_name=json.loads(data[24].replace("'", '"'))['name'] #change to double quote
