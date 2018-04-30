@@ -71,15 +71,6 @@ def addUser(IDToAdd):
 	conn = sqlite3.connect('posts.db')
 	c = conn.cursor()
 	with conn:
-			c.execute("INSERT INTO users VALUES (?,?)",IDToAdd, str(time.time()))
-	conn.commit()
-	conn.close()
-	return "post added"
-
-def addUser(IDToAdd):
-	conn = sqlite3.connect('posts.db')
-	c = conn.cursor()
-	with conn:
 			c.execute("INSERT INTO users VALUES (?,?)",(IDToAdd, int(time.time())))
 	conn.commit()
 	conn.close()
