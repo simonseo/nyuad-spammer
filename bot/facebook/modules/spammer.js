@@ -17,6 +17,7 @@ module.exports = (bot) => {
 
     var userid = convo.get('userID');
     var categoryNames = convo.get('categoryNames');
+<<<<<<< HEAD
     var params = {"userid": userid, "categoryNames": categoryNames};
     console.log(params);
 
@@ -29,12 +30,32 @@ module.exports = (bot) => {
 
     xmlHTTP.open('POST', getURL, true);
     xmlHTTP.send(JSON.stringify(params));
+=======
+    var params = {"userid":userid,"categoryNames":categoryNames};
+    console.log(JSON.stringify(params));
 
-    xmlHTTP.onreadystatechange = processRequest;
-
+    var getUserURL = url + 'addUser/' + userid;
+    var xmlHTTPUser = new XMLHttpRequest();
+    xmlHTTPUser.open('GET', getUserURL, true);
+    xmlHTTPUser.send();
+    xmlHTTPUser.onreadystatechange = processRequest;
     function processRequest(e) {
-      if (xmlHTTP.readyState == 4 && xmlHTTP.status == 200) {
-          console.log(xmlHTTP.responseText);
+      if (xmlHTTPUser.readyState == 4 && xmlHTTPUser.status == 200) {
+          console.log(xmlHTTPUser.responseText);
+      }
+    }
+
+    var getSubscriptionsURL = url + 'addUserSubscription';
+    var xmlHTTPSubscription = new XMLHttpRequest();
+>>>>>>> 5a008bf80d947ba8d26b49a389eabf9ea790d328
+
+    xmlHTTPSubscription.open('POST', getSubscriptionsURL, true);
+    xmlHTTPSubscription.send(JSON.stringify(params));
+
+    xmlHTTPSubscription.onreadystatechange = processRequest;
+    function processRequest(e) {
+      if (xmlHTTPSubscription.readyState == 4 && xmlHTTPSubscription.status == 200) {
+          console.log(xmlHTTPSubscription.responseText);
           convo.say("Perfect! Your subscriptions have been saved!", { typing:true });
       }
     }
@@ -58,7 +79,11 @@ module.exports = (bot) => {
     convo.say('Type all the names of the categories you wish to be subscribed to separated by commas. (ex. Academics, Facilities, Health and Wellness).', { typing: true })
 
     // convo.ask(doNothing, (payload, convo) => {
+<<<<<<< HEAD
     const categoryNames = 'athetlics, studentlife';
+=======
+    const categoryNames = "athletics, facilities, finance";
+>>>>>>> 5a008bf80d947ba8d26b49a389eabf9ea790d328
       // const categoryNames = payload.message.text;
       const updatedCategoryNames = categoryNames.toLowerCase().replace(/\s/g, '');
       convo.set('categoryNames', updatedCategoryNames);
@@ -85,6 +110,7 @@ module.exports = (bot) => {
   ///////////////////////////////////////
 
   const removeSubscriptionsFromFlask = (convo) => {
+<<<<<<< HEAD
 
     var userid = convo.get('userID');
     var categoryNames = convo.get('categoryNames');
@@ -102,6 +128,23 @@ module.exports = (bot) => {
       if (xmlHTTP.readyState == 4 && xmlHTTP.status == 200) {
           console.log(xmlHTTP.responseText);
           convo.say("Perfect! We have removed you from those subscriptions!", { typing:true });
+=======
+
+    var userid = convo.get('userID');
+    var categoryNames = convo.get('categoryNames');
+    var params = {"userid": userid, "categoryNames": categoryNames};
+    console.log(JSON.stringify(params));
+
+    var getUnsubscriptionsURL = url + 'unsubscribe';
+    var xmlHTTPUnsubscription = new XMLHttpRequest();
+    xmlHTTPUnsubscription.open('POST', getUnsubscriptionsURL, true);
+    xmlHTTPUnsubscription.send(JSON.stringify(params));
+    xmlHTTPUnsubscription.onreadystatechange = processRequest;
+    function processRequest(e) {
+      if (xmlHTTPUnsubscription.readyState == 4 && xmlHTTPUnsubscription.status == 200) {
+          console.log(xmlHTTPUnsubscription.responseText);
+          convo.say("Perfect! You have been unsubscribed!", { typing:true });
+>>>>>>> 5a008bf80d947ba8d26b49a389eabf9ea790d328
       }
     }
 
@@ -123,9 +166,15 @@ module.exports = (bot) => {
 
     convo.say('Type all the names of the categories you wish to be unsubscribed from separated by commas. (ex. Academics, Facilities, Health and Wellness).', { typing: true })
 
+<<<<<<< HEAD
     // convo.ask(doNothing, (payload, convo) => {
     const categoryNames = 'athetlics, studentlife';
       // const categoryNames = payload.message.text;
+=======
+    convo.ask(doNothing, (payload, convo) => {
+    // const categoryNames = "finance";
+      const categoryNames = payload.message.text;
+>>>>>>> 5a008bf80d947ba8d26b49a389eabf9ea790d328
       const updatedCategoryNames = categoryNames.toLowerCase().replace(/\s/g, '');
       convo.set('categoryNames', updatedCategoryNames);
 

@@ -24,12 +24,12 @@ def addUser(IDToAdd):
 
 @app.route("/addUserSubscription", methods=['POST'])
 def addSub():
-	data = json.loads(request.json)
+	data = json.loads(request.data.decode("utf-8"))
 	return db.addSub(data["userid"],data["categoryNames"])
 
 @app.route("/unsubscribe", methods=['POST'])
 def unSub():
-	data = json.loads(request.json)
+	data = json.loads(request.data.decode("utf-8"))
 	return db.unSub(data["userid"],data["categoryNames"])
 
 @app.route("/getpost/<int:getID>")
@@ -43,6 +43,9 @@ def removepost(rmID):
 @app.route("/", methods=['GET','POST'])
 def getCSV():
 	# http://flask.pocoo.org/docs/patterns/fileuploads/
+
+	print(request.data)
+
 	if request.method == 'POST':
 		if 'file' not in request.files:
 			return "No file part"
