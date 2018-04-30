@@ -1,6 +1,7 @@
 import sqlite3
 from post import Post
 from datetime import datetime as dt
+import time
 
 def addpost(data):
 	postToAdd=Post(data)
@@ -66,3 +67,51 @@ def injectData(data):
 		addpost(row)
 	return "All data inserted"
 
+def addUser(IDToAdd):
+	conn = sqlite3.connect('posts.db')
+	c = conn.cursor()
+	with conn:
+			c.execute("INSERT INTO users VALUES (?,?)",(IDToAdd, int(time.time())))
+	conn.commit()
+	conn.close()
+	return "user added"
+
+def addSub(userID, categoryNames):
+	conn = sqlite3.connect('posts.db')
+	c = conn.cursor()
+	categories=categoryNames.split(',')
+	for category in categories:
+		with conn:
+			c.execute("SELECT topic_id FROM topics WHERE topic = ?",(category,))
+			topic_id_found=c.fetchone()
+			print(topic_id_found[0])
+			if topic_id_found:
+				# print("Found the topic "+category)
+				c.execute("SELECT * FROM userSubscriptions WHERE userID = ? AND topic_id = ? ",(userID,topic_id_found[0]))
+				result_exists=c.fetchone()
+				# print("Result: "+str(result_exists))
+				if not result_exists:
+					c.execute("INSERT INTO userSubscriptions VALUES (?,?)",(topic_id_found[0],userID))
+					print("New subscription")
+	return "user subscribed"
+
+def unSub(userID, categoryNames):
+	conn = sqlite3.connect('posts.db')
+	c = conn.cursor()
+	categories=categoryNames.split(',')
+	for category in categories:
+		with conn:
+			c.execute("SELECT topic_id FROM topics WHERE topic = ?",(category,))
+		topic_id_found=c.fetchone()
+		print(topic_id_found)
+		if topic_id_found:
+			print("Found the topic "+category)
+			with conn:
+				c.execute("DELETE from userSubscriptions WHERE topic_id = ? AND userID = ?",(topic_id_found[0], userID))
+			result=c.fetchone
+			if result:
+				print("Unsubscibed "+str(userID)+" from "+category)
+	return "user unsubscribed"
+
+def sendPost(postID):
+	return "Sent to chatbot"
