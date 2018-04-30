@@ -85,14 +85,23 @@ def addUser(IDToAdd):
 	conn.close()
 	return "user added"
 
+def addSub(userID, categoryNames):
+	conn = sqlite3.connect('posts.db')
+	c = conn.cursor()
+	categories=categoryNames.split(',')
+	for category in categories:
+		with conn:
+			c.execute("SELECT topic_id FROM topics WHERE topic = ?",(category,))
+			topic_id_found=c.fetchone()
+			print(topic_id_found)
+			if topic_id_found:
+				print("Found the topic "+category)
+				c.execute("SELECT * FROM userSubscriptions WHERE userID = ? AND topic_id = ? ",(userID,x[0]))
+				result_exists=c.fetchone
+				if not result_exists:
+					c.execute("INSERT INTO userSubscriptions VALUES (?,?)",(x[0],userID))
+					print("New subscription")
+	return "user subscribed"
 
-
-
-
-
-
-
-
-
-
-
+def getUsers(topic):
+	return users

@@ -18,13 +18,19 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 def printall():
 	return db.printall()
 
-# @app.route("/addpost/<int:IDToAdd>/<postToAdd>")
-# def addpost(IDToAdd,postToAdd):
-# 	return db.addpost(IDToAdd,postToAdd)
-
 @app.route("/addUser/<IDToAdd>")
 def addUser(IDToAdd):
 	return db.addUser(IDToAdd)
+
+@app.route("/addUserSubscription", methods=['POST'])
+def addSub():
+	data = json.loads(request.json)
+	return db.addSub(data["userid"],data["categoryNames"])
+
+# @app.route("/unsubscribe", methods=['POST'])
+# def unSub():
+# 	data = json.loads(request.json)
+# 	return db.addSub(data["userid"],data["categoryNames"])
 
 @app.route("/getpost/<int:getID>")
 def getpost(getID):
@@ -49,15 +55,6 @@ def getCSV():
 			db.injectData(ReadCSV(filename))
 			return "upload successful"
 	return "Invalid use"
-	# return '''
-	# <!doctype html>
-	# <title>Upload new File</title>
-	# <h1>Upload new File</h1>
-	# <form method=post enctype=multipart/form-data>
-	#   <p><input type=file name=file>
-	# 	 <input type=submit value=Upload>
-	# </form>
-	# '''
 
 @app.route("/postJson", methods=['POST'])
 def postJson():

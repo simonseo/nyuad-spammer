@@ -35,8 +35,32 @@ def DBsetup():
 		topic text not null
 	)""")
 
-	topics= dict( [("Academics", 1), ("Environmental Health and Safety", 2), ("Intercultural Affairs", 3), ("Events and Activities", 4), ("Student Activities", 5), ("Dining", 6), ("Community Outreach", 7), ("Fitness Center", 8), ("Research", 9), ("Campus Life", 10), ("Athletics", 11), ("Registrar", 12), ("Community Life", 13), ("First-Year Office", 14), ("Career Development", 15), ("Academic Affairs", 16), ("Spiritual Life", 17), ("Library", 18), ("Communications", 19), ("Finance", 20), ("NYUAD Services", 21), ("Residential Education", 22), ("Global Education", 23), ("Mentoring", 24), ("Admissions", 25), ("Around Abu Dhabi", 26), ("Grants", 27), ("Bookstore", 28), ("Facilities", 29), ("Health and Welness", 30), ("Housing", 31), ("Human Resources", 32), ("Mail", 33), ("Public Safety", 34), ("Technology", 35), ("Transportation", 36), ("Travel", 37), ("Operations", 38), ("Students Abroad", 39)])
-
+	topics= dict([("academics", 1),
+("interculturalaffairs", 2),
+("eventsandactivities", 3),
+("studentactivities", 4),
+("dining", 5),
+("communityoutreach", 6),
+("fitnesscenter", 7),
+("research", 8),
+("campuslife", 9),
+("athletics", 10),
+("registrar", 11),
+("communitylife", 12),
+("careerdevelopment", 13),
+("academicaffairs", 14),
+("spirituallife", 15),
+("library", 16),
+("finance", 17),
+("residentialeducation", 18),
+("globaleducation", 19),
+("facilities", 20),
+("healthandwellness", 21),
+("housing", 22),
+("publicsafety", 23),
+("transportation", 24),
+("first-yearoffice", 25)])
+	
 	for k, v in topics.items():
 		c.execute("INSERT INTO topics VALUES (:topic_id, :topic)", {"topic_id":v, "topic":k})
 
