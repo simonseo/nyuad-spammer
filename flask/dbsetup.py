@@ -61,8 +61,13 @@ def DBsetup():
 ("transportation", 24),
 ("first-yearoffice", 25)])
 	
-	for k, v in topics.items():
-		c.execute("INSERT INTO topics VALUES (:topic_id, :topic)", {"topic_id":v, "topic":k})
+	c.execute("SELECT COUNT(*) from topics")
+	count=c.fetchone()
+	# print(count[0])
+	
+	if not count[0]:
+		for k, v in topics.items():
+				c.execute("INSERT INTO topics VALUES (:topic_id, :topic)", {"topic_id":v, "topic":k})
 
 	conn.commit()
 	conn.close()

@@ -93,15 +93,34 @@ def addSub(userID, categoryNames):
 		with conn:
 			c.execute("SELECT topic_id FROM topics WHERE topic = ?",(category,))
 			topic_id_found=c.fetchone()
-			print(topic_id_found)
+			print(topic_id_found[0])
 			if topic_id_found:
-				print("Found the topic "+category)
-				c.execute("SELECT * FROM userSubscriptions WHERE userID = ? AND topic_id = ? ",(userID,x[0]))
-				result_exists=c.fetchone
+				# print("Found the topic "+category)
+				c.execute("SELECT * FROM userSubscriptions WHERE userID = ? AND topic_id = ? ",(userID,topic_id_found[0]))
+				result_exists=c.fetchone()
+				# print("Result: "+str(result_exists))
 				if not result_exists:
-					c.execute("INSERT INTO userSubscriptions VALUES (?,?)",(x[0],userID))
+					c.execute("INSERT INTO userSubscriptions VALUES (?,?)",(topic_id_found[0],userID))
 					print("New subscription")
 	return "user subscribed"
 
-def getUsers(topic):
-	return users
+def unSub(userID, categoryNames):
+	conn = sqlite3.connect('posts.db')
+	c = conn.cursor()
+	categories=categoryNames.split(',')
+	for category in categories:
+		with conn:
+			c.execute("SELECT topic_id FROM topics WHERE topic = ?",(category,))
+		topic_id_found=c.fetchone()
+		print(topic_id_found)
+		if topic_id_found:
+			print("Found the topic "+category)
+			with conn:
+				c.execute("DELETE from userSubscriptions WHERE topic_id = ? AND userID = ?",(topic_id_found[0], userID))
+			result=c.fetchone
+			if result:
+				print("Unsubscibed "+str(userID)+" from "+category)
+	return "user unsubscribed"
+
+def sendPost(postID):
+	return "Sent to chatbot"
