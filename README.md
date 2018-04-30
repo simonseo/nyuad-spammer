@@ -13,7 +13,7 @@ many students do not check the student portal often enough, and miss information
 ## Purpose and Goals
 The purpose of this project is to help the NYUAD student community be informed of deadlines, events, operating campus time changes, and other university-related information.
 
-Our goal is to create a Facebook Messenger Chatbot that will allow students to get message notifications. This will be done through the scraping of Student Portal using python and BeautifulSoup. We decided the facebook chatbot, as facebook messenger is an application that
+Our goal is to create a Facebook Messenger Chatbot that will allow students to get message notifications. This will be done through the scraping of Student Portal. We decided the facebook chatbot, as facebook messenger is an application that
 most students check multiple times throughout the day. We believe that if we can merge the flow of useful information to a channel which is already used often, it would be easier for the information to be properly delivered.
 
 ## User Stories and Use Cases
