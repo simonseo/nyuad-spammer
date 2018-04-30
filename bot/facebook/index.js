@@ -3,7 +3,6 @@
 const BootBot = require('bootbot');
 const config = require('config');
 
-const categoriesModule = require('./modules/categories');
 const spammerModule = require('./modules/spammer');
 const dialogflowModule = require('./modules/dialogflow');
 
@@ -13,37 +12,35 @@ const bot = new BootBot({
   appSecret: config.get('app_secret'),
 });
 
-bot.module(categoriesModule);
-bot.module(spammerModule);
-
 bot.setGetStartedButton((payload, chat) => {
   chat.getUserProfile()
   .then((user) => {
     chat.say(`Hello, ${user.first_name}! I am the NYUAD Spammer Bot. I am here to help you access Student Portal quickly and efficiently.`)
     .then(() => {
-      chat.say('To view our categories, subscribe to notifications, or unsubscribe from them, just click the buttons from the menu.', { typing: true });
+      chat.say('To view the latest updates, subscribe to notifications, or unsubscribe from them, just click the buttons from the menu.', { typing: true });
     });
   });
 });
 
 bot.setPersistentMenu([
   {
-    title: 'Categories',
+    title: 'About',
     type: 'postback',
-    payload: 'MENU_CATEGORIES'
+    payload: 'MENU_ABOUT'
   },
   {
-    title: 'Subscribe',
+    title: 'Updates',
     type: 'postback',
-    payload: 'MENU_SUBSCRIBE'
+    payload: 'MENU_UPDATES'
   },
   {
-    title: 'Unsubscribe',
+    title: 'Subscriptions',
     type: 'postback',
-    payload: 'MENU_UNSUBSCRIBE'
+    payload: 'MENU_SUBSCRIPTION'
   }
 ]);
 
+bot.module(spammerModule);
 bot.module(dialogflowModule);
 
 bot.start(process.env.PORT || 3000);
