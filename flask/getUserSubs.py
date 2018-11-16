@@ -27,17 +27,17 @@ def getUserSubs(userID):
 			for topic in subscribed_topics:
 				topics_list.append(topic[0])
 			print("User:\n"+str(userID)+"\n"+str(topics_list))
-			c.execute("SELECT ID,message,updated_at from posts where topic in ({})"
+			c.execute("SELECT ID,title,message,updated_at from posts where topic in ({})"
 				.format(','.join('?'*len(topics_list))),(topics_list))
 			posts_selected=c.fetchall()
 			for post in posts_selected:
-				savedTime=dt.strptime(post[2], "%Y-%m-%d %H:%M:%S")
+				savedTime=dt.strptime(post[3], "%Y-%m-%d %H:%M:%S")
 				unixtime = time.mktime(savedTime.timetuple())
 				c.execute("SELECT last_updated from users where userID=?",(userID,))
 				last_updated=c.fetchone()[0]
 				print(unixtime,last_updated)
 				if unixtime>last_updated:
-					to_send["posts"].append(post[1])
+					to_send["posts"].append(post[1]+post[2])
 			c.execute("UPDATE users SET last_updated=? WHERE userID=?", (int(time.time()), userID))
 
 

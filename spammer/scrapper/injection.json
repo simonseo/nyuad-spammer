@@ -1,0 +1,79 @@
+{
+    "today": "2018-04-05T18:36:50+0400",
+    "announcements": [
+      {
+        "id": 99999,
+        "title": "Arab Crossroads Studies Talk April 10 Noon A6-1159",
+        "message": "<p>Please join us for our next ACS talk on Tuesday, April 10 at noon in A6-1159.</p><p>Keren Weitzberg from the Institute of Advanced Studies, University College London will present a talk, titled: &quot;Political Work Beyond the Archives: Poetry and the Making of Nationalism on the Kenya/Somali Borderlands.&quot;</p><p>Lunch will be provided!</p>",
+        "topic": "Academics",
+        "category_id": 1,
+        "audience": [
+          "Students",
+          "Faculty",
+          "Staff"
+        ],
+        "location": [
+          "Abu Dhabi"
+        ],
+        "publish_date": "2018-11-05",
+        "expiration_date": "2018-11-16",
+        "owner": "dar379",
+        "fullname": "Deina Rabie",
+        "email": "dar379@nyu.edu",
+        "alert": 0,
+        "alert_start": "0000-00-00 00:00:00",
+        "alert_end": "0000-00-00 00:00:00",
+        "updated": 0,
+        "republished_at": "0000-00-00 00:00:00",
+        "updated_at": "2018-11-16 23:45:39",
+        "created_at": "2018-04-05 17:09:39",
+        "alert_start_time": "12:00 AM",
+        "alert_start_date": "0000-00-00",
+        "alert_end_time": "12:00 AM",
+        "alert_end_date": "0000-00-00",
+        "editable": false,
+        "category": {
+          "id": 1,
+          "name": "Events & Activities"
+        }
+      }
+    ],
+    "categories": [
+      {
+        "id": 3,
+        "name": "Deadlines"
+      },
+      {
+        "id": 6,
+        "name": "Discounts, Deals & Promotions"
+      },
+      {
+        "id": 1,
+        "name": "Events & Activities"
+      },
+      {
+        "id": 7,
+        "name": "Job Opportunities, Internships & Volunteering"
+      },
+      {
+        "id": 2,
+        "name": "Learning & Development"
+      },
+      {
+        "id": 8,
+        "name": "New Hires, Changes & Departures"
+      },
+      {
+        "id": 5,
+        "name": "News & Information"
+      },
+      {
+        "id": 9,
+        "name": "Policies"
+      },
+      {
+        "id": 4,
+        "name": "Service Notifications"
+      }
+    ]
+  }
