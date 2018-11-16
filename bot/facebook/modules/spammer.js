@@ -1,7 +1,7 @@
 'use strict';
 
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
-var url = 'http://0.0.0.0:5000/';
+var url = 'http://127.0.0.1:5000/';
 
 module.exports = (bot) => {
 
@@ -39,22 +39,31 @@ module.exports = (bot) => {
 
   const subscriptionCategories = (convo) => {
 
-    var categoriesMessage = 'Academics' + '\n' + 'Intercultural Affairs' + '\n' + 'Events and Activities' + '\n' + 'Student Activities' + '\n' +
-    'Dining' + '\n' + 'Community Outreach' + '\n' +'Fitness Center' + '\n' + 'Research' + '\n' + 'Campus Life' + '\n' + 'Athletics' + '\n' +
-    'Registrar' + '\n' + 'Community Life' + '\n' + 'Career Development' + '\n' + 'Academic Affairs' + '\n' + 'Spiritual Life' + '\n' +
-    'Library' + '\n' + 'Finance' + '\n' + 'Residential Education' + '\n' + 'Global Education' + '\n' + 'Facilities' + '\n' + 'Health and Wellness' + '\n' +
-    'Housing' + '\n' + 'Public Safety' + '\n' + 'Transportation' + '\n' + 'First-Year Office';
-
-    convo.say('Our current categories are: ', { typing:true })
-    .then(() => {
-      convo.say(categoriesMessage);
-    });
-
-    convo.say('Type all the names of the categories you wish to be subscribed to separated by commas. (ex. Academics, Facilities, Health and Wellness).', { typing: true })
+    // var categoriesMessage = 'Academics' + '\n' + 'Intercultural Affairs' + '\n' + 'Events and Activities' + '\n' + 'Student Activities' + '\n' +
+    // 'Dining' + '\n' + 'Community Outreach' + '\n' +'Fitness Center' + '\n' + 'Research' + '\n' + 'Campus Life' + '\n' + 'Athletics' + '\n' +
+    // 'Registrar' + '\n' + 'Community Life' + '\n' + 'Career Development' + '\n' + 'Academic Affairs' + '\n' + 'Spiritual Life' + '\n' +
+    // 'Library' + '\n' + 'Finance' + '\n' + 'Residential Education' + '\n' + 'Global Education' + '\n' + 'Facilities' + '\n' + 'Health and Wellness' + '\n' +
+    // 'Housing' + '\n' + 'Public Safety' + '\n' + 'Transportation' + '\n' + 'First-Year Office';
+    //
+    // convo.say('Our current categories are: ', { typing:true })
+    // .then(() => {
+    //   convo.say(categoriesMessage);
+    // });
+    //
+    // convo.say('Type all the names of the categories you wish to be subscribed to separated by commas. (ex. academics, facilities, health and wellness).', { typing: true })
 
     convo.ask(doNothing, (payload, convo) => {
-      const categoryNames = payload.message.text;
-      const updatedCategoryNames = categoryNames.toLowerCase().replace(/\s/g, '');
+
+      //const categoryNames = payload.message.text;
+      //const updatedCategoryNames = categoryNames.toLowerCase().replace(/\s/g, '');
+
+      const updatedCategoryNames = "academics,academicaffairs,academicresourcecenter,globaleducation,library," +
+      "mentoring,registrar,admissions,campuslife,athletics,careerdevelopment,communityoutreach,first-yearoffice," +
+      "fitnesscenter,interculturalaffairs,residentialeducation,spirituallife,studentactivities,aroundabudhabi," +
+      "eventsandactivities,grants,nyuadservices,bookstore,communications,communitylife,environmentalhealthandsafety," +
+      "dining,facilities,finance,healthandwellness,housing,humanresources,mail,publicsafety,technology,transportation," +
+      "travel,operations,research,studentsabroad"
+
       convo.set('categoryNames', updatedCategoryNames);
 
       addSubscriptionsToFlask(convo);
@@ -66,7 +75,7 @@ module.exports = (bot) => {
     const userID = payload.sender.id;
     chat.conversation((convo) => {
       convo.set('userID', userID);
-      subscriptionCategories(convo);
+      addSubscriptionsToFlask(convo);
       return;
     });
   });
@@ -78,6 +87,7 @@ module.exports = (bot) => {
   const removeSubscriptionsFromFlask = (convo) => {
 
     var userid = convo.get('userID');
+    var params = {"userid": userid};
     var categoryNames = convo.get('categoryNames');
     var params = {"userid": userid, "categoryNames": categoryNames};
     console.log(JSON.stringify(params));
@@ -101,22 +111,31 @@ module.exports = (bot) => {
 
   const unsubscriptionCategories = (convo) => {
 
-    var categoriesMessage = 'Academics' + '\n' + 'Intercultural Affairs' + '\n' + 'Events and Activities' + '\n' + 'Student Activities' + '\n' +
-    'Dining' + '\n' + 'Community Outreach' + '\n' +'Fitness Center' + '\n' + 'Research' + '\n' + 'Campus Life' + '\n' + 'Athletics' + '\n' +
-    'Registrar' + '\n' + 'Community Life' + '\n' + 'Career Development' + '\n' + 'Academic Affairs' + '\n' + 'Spiritual Life' + '\n' +
-    'Library' + '\n' + 'Finance' + '\n' + 'Residential Education' + '\n' + 'Global Education' + '\n' + 'Facilities' + '\n' + 'Health and Wellness' + '\n' +
-    'Housing' + '\n' + 'Public Safety' + '\n' + 'Transportation' + '\n' + 'First-Year Office';
+    // var categoriesMessage = 'Academics' + '\n' + 'Intercultural Affairs' + '\n' + 'Events and Activities' + '\n' + 'Student Activities' + '\n' +
+    // 'Dining' + '\n' + 'Community Outreach' + '\n' +'Fitness Center' + '\n' + 'Research' + '\n' + 'Campus Life' + '\n' + 'Athletics' + '\n' +
+    // 'Registrar' + '\n' + 'Community Life' + '\n' + 'Career Development' + '\n' + 'Academic Affairs' + '\n' + 'Spiritual Life' + '\n' +
+    // 'Library' + '\n' + 'Finance' + '\n' + 'Residential Education' + '\n' + 'Global Education' + '\n' + 'Facilities' + '\n' + 'Health and Wellness' + '\n' +
+    // 'Housing' + '\n' + 'Public Safety' + '\n' + 'Transportation' + '\n' + 'First-Year Office';
+    //
+    // convo.say('Our current categories are: ', { typing:true })
+    // .then(() => {
+    //   convo.say(categoriesMessage);
+    // });
 
-    convo.say('Our current categories are: ', { typing:true })
-    .then(() => {
-      convo.say(categoriesMessage);
-    });
-
-    convo.say('Type all the names of the categories you wish to be unsubscribed from separated by commas. (ex. Academics, Facilities, Health and Wellness).', { typing: true })
+    //convo.say('Type all the names of the categories you wish to be unsubscribed from separated by commas. (ex. Academics, Facilities, Health and Wellness).', { typing: true })
 
     convo.ask(doNothing, (payload, convo) => {
-      const categoryNames = payload.message.text;
-      const updatedCategoryNames = categoryNames.toLowerCase().replace(/\s/g, '');
+
+      //const categoryNames = payload.message.text;
+      //const updatedCategoryNames = categoryNames.toLowerCase().replace(/\s/g, '');
+
+      const updatedCategoryNames = "academics,academicaffairs,academicresourcecenter,globaleducation,library," +
+      "mentoring,registrar,admissions,campuslife,athletics,careerdevelopment,communityoutreach,first-yearoffice," +
+      "fitnesscenter,interculturalaffairs,residentialeducation,spirituallife,studentactivities,aroundabudhabi," +
+      "eventsandactivities,grants,nyuadservices,bookstore,communications,communitylife,environmentalhealthandsafety," +
+      "dining,facilities,finance,healthandwellness,housing,humanresources,mail,publicsafety,technology,transportation," +
+      "travel,operations,research,studentsabroad"
+      
       convo.set('categoryNames', updatedCategoryNames);
 
       removeSubscriptionsFromFlask(convo);
@@ -128,7 +147,7 @@ module.exports = (bot) => {
     const userID = payload.sender.id;
     chat.conversation((convo) => {
       convo.set('userID', userID);
-      unsubscriptionCategories(convo);
+      removeSubscriptionsFromFlask(convo);
       return;
     });
   });
