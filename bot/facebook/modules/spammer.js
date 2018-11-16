@@ -75,7 +75,7 @@ module.exports = (bot) => {
     const userID = payload.sender.id;
     chat.conversation((convo) => {
       convo.set('userID', userID);
-      addSubscriptionsToFlask(convo);
+      subscriptionCategories(convo);
       return;
     });
   });
@@ -135,7 +135,7 @@ module.exports = (bot) => {
       "eventsandactivities,grants,nyuadservices,bookstore,communications,communitylife,environmentalhealthandsafety," +
       "dining,facilities,finance,healthandwellness,housing,humanresources,mail,publicsafety,technology,transportation," +
       "travel,operations,research,studentsabroad"
-      
+
       convo.set('categoryNames', updatedCategoryNames);
 
       removeSubscriptionsFromFlask(convo);
@@ -147,7 +147,7 @@ module.exports = (bot) => {
     const userID = payload.sender.id;
     chat.conversation((convo) => {
       convo.set('userID', userID);
-      removeSubscriptionsFromFlask(convo);
+      unsubscriptionCategories(convo);
       return;
     });
   });
