@@ -21,3 +21,4 @@ bot/facebook/config/default.json
 bot/telegram/config/default.json
 node_modules
 selenium/
+flask/new.csv
