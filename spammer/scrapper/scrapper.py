@@ -1,7 +1,7 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*- 
+# -*- coding: utf-8 -*-
 # @File Name: scrapper.py
-# @Created:   2018-04-11 02:57:12  Simon Myunggun Seo (simon.seo@nyu.edu) 
+# @Created:   2018-04-11 02:57:12  Simon Myunggun Seo (simon.seo@nyu.edu)
 # @Updated:   2018-04-18 17:08:14  Simon Seo (simon.seo@nyu.edu)
 import sys, time
 sys.path.insert(0,'..')
@@ -40,7 +40,7 @@ def authenticate(driver):
 		# Duo MFA
 		print("Authenticating Duo MFA")
 		driver.switch_to_frame(driver.find_element_by_id("duo_iframe"))
-		bypass_button = driver.find_elements_by_class_name("auth-button")[1] # 0th is push, 1st is passcode
+		bypass_button = driver.find_elements_by_class_name("auth-button")[2] # 0th is push, 1st is passcode; for Arantza it's 2
 		bypass_button.click()
 
 		generateOTP = duo.HOTP()
@@ -78,6 +78,4 @@ def run(forEvery=5*60):
 	time.sleep(forEvery) # 5 minutes
 
 if __name__ == '__main__':
-	run(forEvery=5)
-
-
+	run()

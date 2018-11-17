@@ -34,21 +34,13 @@
       "resolved": "https://registry.npmjs.org/body-parser/-/body-parser-1.18.2.tgz",
       "version": "1.18.2"
     },
-    "bootbot": "^1.0.14",
+    "bootbot": "^1.0.16",
     "bytes": {
       "integrity": "sha1-0ygVQE1olpn4Wk6k+odV3ROpYEg=",
       "resolved": "https://registry.npmjs.org/bytes/-/bytes-3.0.0.tgz",
       "version": "3.0.0"
     },
-    "config": {
-      "integrity": "sha1-HWCp81NIoTwXV5jThOgaWhbDum4=",
-      "requires": {
-        "json5": "0.4.0",
-        "os-homedir": "1.0.2"
-      },
-      "resolved": "https://registry.npmjs.org/config/-/config-1.30.0.tgz",
-      "version": "1.30.0"
-    },
+    "config": "^2.0.1",
     "content-disposition": {
       "integrity": "sha1-DPaLud318r55YcOoUXjLhdunjLQ=",
       "resolved": "https://registry.npmjs.org/content-disposition/-/content-disposition-0.5.2.tgz",
