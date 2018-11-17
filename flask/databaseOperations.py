@@ -96,6 +96,21 @@ def addSub(userID, categoryNames):
 					print("New subscription")
 	return "user subscribed"
 
+def addSubAll(userID):
+	userID=str(userID)
+	conn = sqlite3.connect('posts.db')
+	c = conn.cursor()
+	with conn:
+		c.execute("SELECT topic FROM topics")
+	x=c.fetchall()
+	topicList=""
+	for topic in x:
+		topicList+=topic[0]
+		topicList+=","
+	# print(topicList)
+	addSub(userID,topicList)
+	return "user subscribed to all"
+
 def unSub(userID, categoryNames):
 	conn = sqlite3.connect('posts.db')
 	c = conn.cursor()
@@ -113,3 +128,5 @@ def unSub(userID, categoryNames):
 			if result:
 				print("Unsubscibed "+str(userID)+" from "+category)
 	return "user unsubscribed"
+
+

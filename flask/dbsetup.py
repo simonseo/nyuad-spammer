@@ -88,3 +88,7 @@ def DBsetup():
 	conn.close()
 
 	print("Database has been setup")
+
+
+if __name__ == "__main__":
+	DBsetup()
