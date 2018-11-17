@@ -113,3 +113,4 @@ def unSub(userID, categoryNames):
 			if result:
 				print("Unsubscibed "+str(userID)+" from "+category)
 	return "user unsubscribed"
+
