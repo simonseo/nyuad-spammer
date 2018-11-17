@@ -86,6 +86,11 @@ def postJson():
 	db.injectData(ReadCSV(filename))
 	return Response('We received something...')
 
+@app.route("/addUserSubscriptionAll", methods=['POST'])
+def addSubAll():
+	data = json.loads(request.data.decode("utf-8"))
+	return db.addSubAll(data["userid"])
+
 if __name__ == "__main__":
 	DBsetup()
 	app.run()#host=HOSTADDRESS, port=80)
