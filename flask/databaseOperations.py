@@ -13,7 +13,7 @@ def addpost(data):
 	x=c.fetchone()
 
 	if x:
-		if x[0]=='1':
+		if postToAdd.updated=='1':
 			savedTime=dt.strptime(x[1], "%Y-%m-%d %H:%M:%S")
 			toAddTime=dt.strptime(postToAdd.updated_at, "%Y-%m-%d %H:%M:%S")
 			if toAddTime > savedTime:
