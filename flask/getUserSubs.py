@@ -8,6 +8,7 @@ from flask import jsonify
 
 
 def getUserSubs(userID):
+	# look through all posts and tell user of any new or updated announcements
 	conn = sqlite3.connect('posts.db')
 	c = conn.cursor()
 	to_send={"posts":[]}
