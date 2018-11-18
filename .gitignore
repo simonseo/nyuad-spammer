@@ -17,8 +17,7 @@ duo/secrets_backup.json
 include/
 lib/
 pip-selfcheck.json
-bot/facebook/config/default.json
-bot/telegram/config/default.json
+bot/config/default.json
 node_modules
 selenium/
 flask/new.csv
