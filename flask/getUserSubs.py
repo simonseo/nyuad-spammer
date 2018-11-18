@@ -35,7 +35,7 @@ def getUserSubs(userID):
 			for post in posts_selected:
 				savedTime=dt.strptime(post[3], "%Y-%m-%d %H:%M:%S") #this is the updated_at attribute
 				unixtime = time.mktime(savedTime.timetuple())
-				print("Unix time:",unixtime,", last updated:",last_updated)
+				# print("Unix time:",unixtime,", last updated:",last_updated)
 				if unixtime>last_updated:
 					to_send["posts"].append(post[1]+post[2])
 			c.execute("UPDATE users SET last_updated=? WHERE userID=?", (int(time.time()), userID))

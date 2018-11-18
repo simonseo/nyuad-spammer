@@ -6,8 +6,6 @@ const schedule = require('node-schedule');
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 var url = 'http://127.0.0.1:5000/';
 
-var TurndownService = require('turndown');
-var turndownService = new TurndownService();
 
 const aboutModule = require('./modules/about');
 const spammerModule = require('./modules/spammer');
@@ -22,18 +20,18 @@ const bot = new BootBot({
 
 (function scheduleExistingUsers() {
   // When the chatbot server starts, re-subscribe existing users
-  var getUsersURL = url + 'getUsers/';
+  var getUsersURL = url + 'getUsers';
   var xmlHTTPUser = new XMLHttpRequest();
   xmlHTTPUser.open('GET', getUsersURL, true);
   xmlHTTPUser.send();
   xmlHTTPUser.onreadystatechange = processRequest;
   function processRequest(e) {
     if (xmlHTTPUser.readyState == 4 && xmlHTTPUser.status == 200) {
-      var users = JSON.parse(xmlHTTPPost.responseText);
+      var users = JSON.parse(xmlHTTPUser.responseText);
       console.log("Current subscribed users' ids are:", users);
 
       for (var i=0; i<users["users"].length; i++){
-        userid = users["users"][i];
+        var userid = users["users"][i];
         schedule.scheduleJob('*/1 * * * *', getUserSubs(userid));
       }
     }
