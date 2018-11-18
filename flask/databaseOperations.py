@@ -129,4 +129,19 @@ def unSub(userID, categoryNames):
 				print("Unsubscibed "+str(userID)+" from "+category)
 	return "user unsubscribed"
 
+def unSubAll(userID):
+	userID=str(userID)
+	conn = sqlite3.connect('posts.db')
+	c = conn.cursor()
+	with conn:
+		c.execute("SELECT topic FROM topics")
+	x=c.fetchall()
+	topicList=""
+	for topic in x:
+		topicList+=topic[0]
+		topicList+=","
+	# print(topicList)
+	unSub(userID,topicList)
+	return "user unsubscribed from all"	
+
 
