@@ -30,7 +30,7 @@ module.exports = (bot) => {
     function processRequest(e) {
       if (xmlHTTPSubscription.readyState == 4 && xmlHTTPSubscription.status == 200) {
           console.log(xmlHTTPSubscription.responseText);
-          convo.say("Perfect! Your subscription has been saved!", { typing:true });
+          convo.say("Perfect! You're now subscribed to the NYUAD Student Portal!", { typing:true });
       }
     }
 

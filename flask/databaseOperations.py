@@ -5,6 +5,10 @@ import time
 from sendPost import SendPost
 def addpost(data):
 	postToAdd=Post(data)
+	if postToAdd.updated not in ('0','1'):
+		# row is not of expected value, probably a header
+		return "Data was a header: {}".format(data)
+
 	conn = sqlite3.connect('posts.db')
 	c = conn.cursor()
 
