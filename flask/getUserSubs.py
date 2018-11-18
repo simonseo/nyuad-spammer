@@ -7,10 +7,6 @@ from datetime import datetime as dt
 from flask import jsonify
 
 
-# @app.route("/getUsers", methods=['POST'])
-# def getUsers():
-# 	return getUsers()
-
 def getUserSubs(userID):
 	conn = sqlite3.connect('posts.db')
 	c = conn.cursor()
