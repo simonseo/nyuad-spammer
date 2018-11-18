@@ -83,7 +83,7 @@ def postJson():
 	new_data.close()
 
 	# Put data into DB
-	db.injectData(sorted(ReadCSV(filename),key= lambda x: x["updated_at"],reverse=True))
+	db.injectData(sorted(ReadCSV(filename),key= lambda x: x[17],reverse=True)) #where updated_at is
 	return Response("We received something")
 
 @app.route("/addUserSubscriptionAll", methods=['POST'])
