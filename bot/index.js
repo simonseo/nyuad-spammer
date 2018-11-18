@@ -43,7 +43,7 @@ bot.setGetStartedButton((payload, chat) => {
 
   var subscription = schedule.scheduleJob('*/1 * * * *', function(){
 
-    var postsURL = url + 'getUserSubs/' + userid;;
+    var postsURL = url + 'getUserSubs/' + userid;
     var xmlHTTPPost = new XMLHttpRequest();
 
     xmlHTTPPost.open('GET', postsURL, true);
@@ -63,7 +63,6 @@ bot.setGetStartedButton((payload, chat) => {
       }
     }
   });
-
 });
 
 bot.setPersistentMenu([
