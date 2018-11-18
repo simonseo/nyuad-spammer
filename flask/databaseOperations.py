@@ -63,7 +63,7 @@ def printall():
 
 def injectData(data):
 	# Assume first row of data is header
-	print("This should be the header: "+data.pop(0)) # remove header
+	print("This should be the header: ", data.pop(0)) # remove header
 	for row in data:
 		addpost(row)
 	return "All data inserted"
@@ -142,6 +142,4 @@ def unSubAll(userID):
 		topicList+=","
 	# print(topicList)
 	unSub(userID,topicList)
-	return "user unsubscribed from all"	
-
-
+	return "user unsubscribed from all"
