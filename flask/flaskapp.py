@@ -4,6 +4,7 @@ from werkzeug import secure_filename
 from readCSV import ReadCSV
 from dbsetup import DBsetup
 from getUserSubs import getUserSubs
+from getUsers import getUsers
 import databaseOperations as db
 import sqlite3
 import os
@@ -95,6 +96,10 @@ def addSubAll():
 def unSubAll():
 	data = json.loads(request.data.decode("utf-8"))
 	return db.unSubAll(data["userid"])
+
+@app.route("/getUsers", methods=['POST'])
+def getUsers():
+	return getUsers()
 
 if __name__ == "__main__":
 	DBsetup()
