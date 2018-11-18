@@ -5,7 +5,7 @@ var url = 'http://127.0.0.1:5000/';
 var TurndownService = require('turndown');
 var turndownService = new TurndownService();
 
-module.exports = (userid) => {
+module.exports = (bot, userid) => {
   // notice that getUserSubs returns a function that can be passed as a callback function for scheduling
 
   return function(){

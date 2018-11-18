@@ -32,7 +32,7 @@ const bot = new BootBot({
 
       for (var i=0; i<users["users"].length; i++){
         var userid = users["users"][i];
-        schedule.scheduleJob('*/1 * * * *', getUserSubs(userid));
+        schedule.scheduleJob('*/1 * * * *', getUserSubs(bot, userid));
       }
     }
   }
@@ -58,7 +58,7 @@ bot.setGetStartedButton((payload, chat) => {
         console.log(xmlHTTPUser.responseText);
     }
   }
-  var subscription = schedule.scheduleJob('*/1 * * * *', getUserSubs(userid)); // schedule the user to be notified every minute with new announcements
+  var subscription = schedule.scheduleJob('*/1 * * * *', getUserSubs(bot, userid)); // schedule the user to be notified every minute with new announcements
 });
 
 bot.setPersistentMenu([
