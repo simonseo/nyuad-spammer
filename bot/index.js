@@ -6,18 +6,37 @@ const schedule = require('node-schedule');
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 var url = 'http://127.0.0.1:5000/';
 
-var TurndownService = require('turndown');
-var turndownService = new TurndownService();
 
 const aboutModule = require('./modules/about');
 const spammerModule = require('./modules/spammer');
 const dialogflowModule = require('./modules/dialogflow');
+const getUserSubs = require('./modules/getUserSubs');
 
 const bot = new BootBot({
   accessToken: config.get('access_token'),
   verifyToken: config.get('verify_token'),
   appSecret: config.get('app_secret'),
 });
+
+(function scheduleExistingUsers() {
+  // When the chatbot server starts, re-subscribe existing users
+  var getUsersURL = url + 'getUsers';
+  var xmlHTTPUser = new XMLHttpRequest();
+  xmlHTTPUser.open('GET', getUsersURL, true);
+  xmlHTTPUser.send();
+  xmlHTTPUser.onreadystatechange = processRequest;
+  function processRequest(e) {
+    if (xmlHTTPUser.readyState == 4 && xmlHTTPUser.status == 200) {
+      var users = JSON.parse(xmlHTTPUser.responseText);
+      console.log("Current subscribed users' ids are:", users);
+
+      for (var i=0; i<users["users"].length; i++){
+        var userid = users["users"][i];
+        schedule.scheduleJob('*/1 * * * *', getUserSubs(userid));
+      }
+    }
+  }
+})();
 
 bot.setGetStartedButton((payload, chat) => {
   chat.getUserProfile()
@@ -29,7 +48,6 @@ bot.setGetStartedButton((payload, chat) => {
   });
 
   const userid = payload.sender.id;
-
   var getUserURL = url + 'addUser/' + userid;
   var xmlHTTPUser = new XMLHttpRequest();
   xmlHTTPUser.open('GET', getUserURL, true);
@@ -40,30 +58,7 @@ bot.setGetStartedButton((payload, chat) => {
         console.log(xmlHTTPUser.responseText);
     }
   }
-
-  var subscription = schedule.scheduleJob('*/1 * * * *', function(){
-
-    var postsURL = url + 'getUserSubs/' + userid;;
-    var xmlHTTPPost = new XMLHttpRequest();
-
-    xmlHTTPPost.open('GET', postsURL, true);
-    xmlHTTPPost.send();
-    xmlHTTPPost.onreadystatechange = processRequest;
-    function processRequest(e) {
-
-      if (xmlHTTPPost.readyState == 4 && xmlHTTPPost.status == 200) {
-
-        var posts = JSON.parse(xmlHTTPPost.responseText);
-        console.log(posts)
-
-        for (var i=0; i<posts["posts"].length; i++){
-            var markdown = turndownService.turndown(posts["posts"][i])
-            chat.say(markdown);
-        }
-      }
-    }
-  });
-
+  var subscription = schedule.scheduleJob('*/1 * * * *', getUserSubs(userid)); // schedule the user to be notified every minute with new announcements
 });
 
 bot.setPersistentMenu([
