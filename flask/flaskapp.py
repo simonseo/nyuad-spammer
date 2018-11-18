@@ -91,6 +91,11 @@ def addSubAll():
 	data = json.loads(request.data.decode("utf-8"))
 	return db.addSubAll(data["userid"])
 
+@app.route("/unsubscribeAll", methods=['POST'])
+def addSubAll():
+	data = json.loads(request.data.decode("utf-8"))
+	return db.unSubAll(data["userid"])
+
 if __name__ == "__main__":
 	DBsetup()
 	app.run()#host=HOSTADDRESS, port=80)
