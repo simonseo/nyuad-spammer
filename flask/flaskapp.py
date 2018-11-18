@@ -92,7 +92,7 @@ def addSubAll():
 	return db.addSubAll(data["userid"])
 
 @app.route("/unsubscribeAll", methods=['POST'])
-def addSubAll():
+def unSubAll():
 	data = json.loads(request.data.decode("utf-8"))
 	return db.unSubAll(data["userid"])
 
