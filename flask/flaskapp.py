@@ -97,8 +97,8 @@ def unSubAll():
 	data = json.loads(request.data.decode("utf-8"))
 	return db.unSubAll(data["userid"])
 
-@app.route("/getUsers", methods=['POST'])
-def getUsers():
+@app.route("/getUsers", methods=['POST','GET'])
+def getListOfUsers():
 	return getUsers()
 
 if __name__ == "__main__":

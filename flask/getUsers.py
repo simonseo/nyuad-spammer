@@ -5,14 +5,14 @@ import databaseOperations as db
 from flask import jsonify
 
 
-def getUsers(userID):
+def getUsers():
 	conn = sqlite3.connect('posts.db')
 	c = conn.cursor()
 	to_send={"users":[]}
 	with conn:
 		c.execute("SELECT userID from users")
 		users_selected=c.fetchall()
-		for user in userIDs_s:
+		for user in users_selected:
 			to_send["users"].append(user[0])
 
 	conn.commit()
