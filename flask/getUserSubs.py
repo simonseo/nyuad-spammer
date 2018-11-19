@@ -39,7 +39,7 @@ def getUserSubs(userID):
 				# print("Unix time:",unixtime,", last updated:",last_updated)
 				if unixtime>last_updated:
 					to_send["posts"].append(post[1]+post[2])
-			c.execute("UPDATE users SET last_updated=? WHERE userID=?", (int(time.time()), userID))
+		c.execute("UPDATE users SET last_updated=? WHERE userID=?", (int(time.time()), userID))
 
 
 	#UPDATE LAST UPDATED FOR THIS USER
