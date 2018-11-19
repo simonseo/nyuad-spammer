@@ -23,11 +23,11 @@ def addpost(data):
 			if toAddTime > savedTime:
 				print("Time replaced for post ID "+ postToAdd.ID)
 				with conn:
-					c.execute("UPDATE posts SET message=?, updated_at=? WHERE ID=?", (postToAdd.message, postToAdd.updated_at, postToAdd.ID))
+					c.execute("UPDATE posts SET message=?, updated_at=? WHERE ID=?", (postToAdd.message, time.strftime("%Y-%m-%d %H:%M:%S"), postToAdd.ID))
 
 	else:
 		with conn:
-			c.execute("INSERT INTO posts VALUES (:category_id, :category_name, :created_at, :email, :fullname, :ID, :message, :publish_date, :title, :topic, :updated, :updated_at)", {"category_id":postToAdd.category_id, "category_name":postToAdd.category_name, "created_at":postToAdd.created_at, "email":postToAdd.email, "fullname":postToAdd.fullname, "ID":postToAdd.ID, "message":postToAdd.message, "publish_date":postToAdd.publish_date, "title":postToAdd.title, "topic":postToAdd.topic, "updated":postToAdd.updated, "updated_at":postToAdd.updated_at})
+			c.execute("INSERT INTO posts VALUES (:category_id, :category_name, :created_at, :email, :fullname, :ID, :message, :publish_date, :title, :topic, :updated, :updated_at)", {"category_id":postToAdd.category_id, "category_name":postToAdd.category_name, "created_at":postToAdd.created_at, "email":postToAdd.email, "fullname":postToAdd.fullname, "ID":postToAdd.ID, "message":postToAdd.message, "publish_date":postToAdd.publish_date, "title":postToAdd.title, "topic":postToAdd.topic, "updated":postToAdd.updated, "updated_at":time.strftime("%Y-%m-%d %H:%M:%S")})
 
 	conn.commit()
 	conn.close()
