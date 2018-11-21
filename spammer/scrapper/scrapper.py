@@ -40,7 +40,7 @@ def authenticate(driver):
 		# Duo MFA
 		print("Authenticating Duo MFA")
 		driver.switch_to_frame(driver.find_element_by_id("duo_iframe"))
-		bypass_button = driver.find_elements_by_class_name("auth-button")[2] # 0th is push, 1st is passcode; for Arantza it's 2
+		bypass_button = driver.find_element_by_id("passcode") # "PASSCODE" button that switches to "LOG IN" button
 		bypass_button.click()
 
 		generateOTP = duo.HOTP()
