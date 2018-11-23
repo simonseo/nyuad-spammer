@@ -28,12 +28,13 @@ def authenticate(driver):
 	if "NYU Login" in driver.title:
 		# Normal Auth
 		print("Authenticating NYU Shibboleth")
+
 		username_box = driver.find_element_by_name("j_username")
-		username_box.clear(); username_box.send_keys(NYU_NETID)
-
 		password_box = driver.find_element_by_name("j_password")
-		password_box.clear(); password_box.send_keys(NYU_PASSWORD)
 
+		driver.execute_script("arguments[0].value = '{}';".format(NYU_NETID), username_box) 
+		driver.execute_script("arguments[0].value = '{}';".format(NYU_PASSWORD), password_box) 
+		
 		password_box.send_keys(Keys.RETURN)
 		time.sleep(5)
 
@@ -47,11 +48,11 @@ def authenticate(driver):
 		passcode = generateOTP()
 
 		passcode_box = driver.find_element_by_name("passcode")
-		passcode_box.clear(); passcode_box.send_keys(passcode)
+		driver.execute_script("arguments[0].value = '{}';".format(passcode), passcode_box) 
 		bypass_button.click()
 
 		driver.switch_to_default_content()
-		time.sleep(3)
+		time.sleep(5)
 
 def getAnnouncementJson(driver):
 	print("Retrieving Student Portal Announcements")
@@ -62,7 +63,7 @@ def getAnnouncementJson(driver):
 	return jsonStr
 
 def send(jsonStr):
-	print("sending data: ", jsonStr[:100], "\n======")
+	print("sending data: ", jsonStr[:300], "\n======")
 	# write code to send jsonStr to DB server here...
 	url = "http://127.0.0.1:5000/postJson"
 	jsonStr = json.dumps(json.loads(jsonStr))
